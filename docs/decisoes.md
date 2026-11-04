@@ -34,3 +34,27 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 - **Checagem de papel em três camadas**: o proxy só garante que há sessão; `exigirProprietario()` em cada página do proprietário redireciona o funcionário para `/caixa`; o RLS garante o resto.
 - **Excluir um usuário que já registrou movimentações ou vendas é bloqueado** pelas chaves estrangeiras. O caminho é desativar (`perfis.ativo = false`), o que preserva o histórico.
 - **Usuários de desenvolvimento**: `npm run usuarios:dev` cria um proprietário e um funcionário só no Supabase local (o script recusa outra URL). As credenciais estão em `scripts/criar-usuarios-dev.mts`.
+
+## Aprovadas na Fase 3
+
+| # | Decisão | Motivo |
+|---|---|---|
+| H | Campo opcional **"Estoque inicial"** no cadastro, registrado como movimentação de entrada ("Estoque inicial") | O dono cadastra e já informa o que tem na prateleira, sem perder o histórico |
+| I | **Mudar o estoque mínimo** reavalia o alerta na hora: subir acima da quantidade abre alerta; baixar resolve | Mesmo princípio da decisão C: o dono precisa saber do estoque baixo, não importa a causa |
+
+## Decisões técnicas da Fase 3
+
+- **Regra de alertas num trigger de `produtos`** (`avaliar_alerta_estoque`): roda quando quantidade, estoque mínimo ou situação mudam, e também no cadastro. Abre um alerta se `quantidade <= estoque_minimo` (produto ativo) e resolve o alerta aberto quando a quantidade passa do mínimo. Fica num lugar só e vale para venda, cancelamento, entrada, saída, ajuste e edição, sem repetir código em cada função.
+- **Consequência**: produto cadastrado com estoque 0 (ou abaixo do mínimo) já nasce com alerta aberto. Produto desativado não abre alerta novo.
+- **Cadastro só pela função `cadastrar_produto`**: o insert direto na tabela foi retirado. O produto nasce já com a quantidade inicial e a movimentação, numa transação só.
+- **`aplicar_movimentacao`**: função interna (ninguém chama pela API) que trava a linha do produto, calcula o novo saldo, recusa estoque negativo e grava a movimentação. As funções públicas (`registrar_entrada`, `registrar_saida_manual`, `registrar_ajuste`) só checam papel e entradas e a chamam. A Fase 4 (venda) e a Fase 8 (cancelamento) vão reutilizá-la.
+- **Erros de regra com código `P0001`**: a aplicação mostra a mensagem do banco ao usuário (ex.: "Estoque insuficiente de Leite: há 3 un em estoque."). Outros erros viram mensagem genérica e o detalhe vai para o log.
+- **Colunas geradas** em `produtos`: `estoque_baixo` (o PostgREST não compara duas colunas num filtro) e `busca` (nome + código, minúsculo e sem acento, com a extensão `unaccent`). Buscar "feijao" encontra "Feijão".
+- **Categorias** sem repetição ignorando maiúsculas ("Bebidas" e "bebidas").
+- **Lista de produtos pela view sem custo** para os dois papéis; para o proprietário, o custo da página atual vem numa segunda consulta à tabela. Assim busca, filtros e paginação ficam num código só.
+- **Filtros na URL** (`?busca=...&estoque=baixo`): a página consulta o banco no servidor, com 50 itens por página. O filtro sobrevive ao recarregar e pode ser compartilhado.
+- **Formulários enviados por `onSubmit`** (e não `<form action>`): o React 19 limpa o formulário depois de um `<form action>`, e o usuário perderia o que digitou se houvesse erro de validação.
+- **Dinheiro digitado** ("1.234,56") é normalizado para texto decimal ("1234.56") e enviado assim ao banco, sem passar por número de ponto flutuante.
+- **Saída e ajuste pedem confirmação** mostrando o estoque antes e depois.
+- **Dependência nova: `cmdk`**, instalada pelo componente `Command` do shadcn/ui. Ela serve ao seletor de produto com busca (combobox acessível por teclado), usado no estoque e nos filtros.
+- **Redirecionamento do funcionário** em páginas do proprietário: como o layout tem `loading.tsx`, o Next responde 200 com um redirecionamento embutido no HTML, sem nenhum dado da página. O banco continua sendo a barreira real.

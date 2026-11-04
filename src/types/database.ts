@@ -139,14 +139,14 @@ isOneToOne: false
                   ]
                 },"produtos": {
                   Row: {
-                    "ativo": boolean,"categoria_id": string | null,"codigo_barras": string | null,"created_at": string,"descricao": string | null,"estoque_minimo": number,"id": string,"nome": string,"preco_custo": number,"preco_venda": number,"quantidade": number,"unidade": string,"updated_at": string
+                    "ativo": boolean,"busca": string | null,"categoria_id": string | null,"codigo_barras": string | null,"created_at": string,"descricao": string | null,"estoque_baixo": boolean | null,"estoque_minimo": number,"id": string,"nome": string,"preco_custo": number,"preco_venda": number,"quantidade": number,"unidade": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "ativo"?: boolean,"categoria_id"?: string | null,"codigo_barras"?: string | null,"created_at"?: string,"descricao"?: string | null,"estoque_minimo"?: number,"id"?: string,"nome": string,"preco_custo"?: number,"preco_venda": number,"quantidade"?: number,"unidade"?: string,"updated_at"?: string
+                    "ativo"?: boolean,"busca"?: never,"categoria_id"?: string | null,"codigo_barras"?: string | null,"created_at"?: string,"descricao"?: string | null,"estoque_baixo"?: never,"estoque_minimo"?: number,"id"?: string,"nome": string,"preco_custo"?: number,"preco_venda": number,"quantidade"?: number,"unidade"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "ativo"?: boolean,"categoria_id"?: string | null,"codigo_barras"?: string | null,"created_at"?: string,"descricao"?: string | null,"estoque_minimo"?: number,"id"?: string,"nome"?: string,"preco_custo"?: number,"preco_venda"?: number,"quantidade"?: number,"unidade"?: string,"updated_at"?: string
+                    "ativo"?: boolean,"busca"?: never,"categoria_id"?: string | null,"codigo_barras"?: string | null,"created_at"?: string,"descricao"?: string | null,"estoque_baixo"?: never,"estoque_minimo"?: number,"id"?: string,"nome"?: string,"preco_custo"?: number,"preco_venda"?: number,"quantidade"?: number,"unidade"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -176,7 +176,7 @@ isOneToOne: false
           Views: {
             "produtos_catalogo": {
                   Row: {
-                    "ativo": boolean,"categoria_id": string | null,"categoria_nome": string | null,"codigo_barras": string | null,"descricao": string | null,"estoque_minimo": number,"id": string,"nome": string,"preco_venda": number,"quantidade": number,"unidade": string
+                    "ativo": boolean,"busca": string | null,"categoria_id": string | null,"categoria_nome": string | null,"codigo_barras": string | null,"descricao": string | null,"estoque_baixo": boolean | null,"estoque_minimo": number,"id": string,"nome": string,"preco_venda": number,"quantidade": number,"unidade": string
                   }
                   ComputedFields: never
                   Relationships: [
@@ -191,11 +191,48 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "eh_proprietario":
+            "aplicar_movimentacao":
+{ Args: { "p_motivo"?: string,"p_produto_id": string,"p_quantidade": number,"p_tipo": Database["public"]['Enums']["tipo_movimentacao"],"p_venda_id"?: string }; Returns: {
+              "created_at": string,
+"id": string,
+"motivo": string | null,
+"produto_id": string,
+"quantidade": number,
+"quantidade_anterior": number,
+"quantidade_posterior": number,
+"tipo": Database["public"]['Enums']["tipo_movimentacao"],
+"usuario_id": string,
+"venda_id": string | null
+            }
+                          SetofOptions: {
+        from: "*"
+        to: "movimentacoes_estoque"
+        isOneToOne: true
+        isSetofReturn: false
+      } },
+"cadastrar_produto":
+{ Args: { "p_categoria_id"?: string,"p_codigo_barras"?: string,"p_descricao"?: string,"p_estoque_inicial"?: number,"p_estoque_minimo"?: number,"p_nome": string,"p_preco_custo"?: number,"p_preco_venda": number,"p_unidade"?: string }; Returns: string
+                           },
+"eh_proprietario":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
 "eh_usuario_ativo":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"exigir_proprietario":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"registrar_ajuste":
+{ Args: { "p_motivo": string,"p_nova_quantidade": number,"p_produto_id": string }; Returns: string
+                           },
+"registrar_entrada":
+{ Args: { "p_motivo"?: string,"p_produto_id": string,"p_quantidade": number }; Returns: string
+                           },
+"registrar_saida_manual":
+{ Args: { "p_motivo": string,"p_produto_id": string,"p_quantidade": number }; Returns: string
+                           },
+"texto_busca":
+{ Args: { "texto": string }; Returns: string
                            }
           }
           Enums: {

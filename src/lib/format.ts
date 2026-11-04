@@ -76,3 +76,64 @@ export function formatarData(data: Date | string): string {
 export function formatarDataHora(data: Date | string): string {
   return formatadorDataHora.format(new Date(data));
 }
+
+// -----------------------------------------------------------------------------
+// Dias no fuso de São Paulo
+// -----------------------------------------------------------------------------
+
+const formatadorDiaIso = new Intl.DateTimeFormat("en-CA", {
+  timeZone: FUSO_HORARIO,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+const formatadorPartes = new Intl.DateTimeFormat("en-US", {
+  timeZone: FUSO_HORARIO,
+  hourCycle: "h23",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+});
+
+/** Dia de um instante no fuso de São Paulo, como "aaaa-mm-dd". */
+export function diaEmSaoPaulo(instante: Date = new Date()): string {
+  return formatadorDiaIso.format(instante);
+}
+
+/** Diferença, em minutos, entre o relógio de São Paulo e o UTC naquele instante. */
+function deslocamentoSaoPaulo(instante: Date): number {
+  const partes = formatadorPartes.formatToParts(instante);
+  const valor = (tipo: Intl.DateTimeFormatPartTypes) =>
+    Number(partes.find((p) => p.type === tipo)?.value);
+  const relogioComoUtc = Date.UTC(
+    valor("year"),
+    valor("month") - 1,
+    valor("day"),
+    valor("hour"),
+    valor("minute"),
+    valor("second"),
+  );
+  return Math.round((relogioComoUtc - instante.getTime()) / 60_000);
+}
+
+/**
+ * Instante em que começa o dia "aaaa-mm-dd" em São Paulo.
+ * Ex.: "2026-10-31" -> 2026-10-31T03:00:00.000Z.
+ * Usa o deslocamento real do fuso (funciona mesmo se o horário de verão voltar).
+ */
+export function inicioDoDiaEmSaoPaulo(dia: string): Date {
+  const [ano, mes, d] = dia.split("-").map(Number);
+  const meiaNoiteUtc = Date.UTC(ano, mes - 1, d);
+  const deslocamento = deslocamentoSaoPaulo(new Date(meiaNoiteUtc));
+  return new Date(meiaNoiteUtc - deslocamento * 60_000);
+}
+
+/** Dia seguinte a "aaaa-mm-dd" (útil para intervalos com fim exclusivo). */
+export function diaSeguinte(dia: string): string {
+  const [ano, mes, d] = dia.split("-").map(Number);
+  return new Date(Date.UTC(ano, mes - 1, d + 1)).toISOString().slice(0, 10);
+}

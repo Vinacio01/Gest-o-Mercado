@@ -95,6 +95,28 @@ export async function criarProdutoTeste(
   return data;
 }
 
+/** Remove o produto e o que depende dele (movimentações e alertas). */
 export async function removerProduto(id: string) {
-  await admin.from("produtos").delete().eq("id", id);
+  await admin.from("movimentacoes_estoque").delete().eq("produto_id", id);
+  await admin.from("alertas_estoque").delete().eq("produto_id", id);
+  const { error } = await admin.from("produtos").delete().eq("id", id);
+  if (error) throw error;
+}
+
+/** Alertas do produto, do mais antigo para o mais novo. */
+export async function alertasDoProduto(id: string) {
+  const { data, error } = await admin
+    .from("alertas_estoque")
+    .select("*")
+    .eq("produto_id", id)
+    .order("created_at")
+    .order("id");
+  if (error) throw error;
+  return data;
+}
+
+export async function quantidadeDoProduto(id: string) {
+  const { data, error } = await admin.from("produtos").select("quantidade").eq("id", id).single();
+  if (error) throw error;
+  return data.quantidade;
 }
