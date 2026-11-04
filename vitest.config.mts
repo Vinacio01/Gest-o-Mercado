@@ -7,6 +7,9 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      // Os serviços do servidor importam "server-only", que só funciona dentro
+      // do Next. Nos testes ele vira um módulo vazio.
+      "server-only": fileURLToPath(new URL("./tests/helpers/vazio.ts", import.meta.url)),
     },
   },
   test: {

@@ -76,3 +76,17 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 - **Atalhos**: Enter adiciona (código exato ou resultado destacado; setas mudam o destaque), F2 finaliza, Esc limpa a busca ou pede confirmação para cancelar a venda.
 - **Erro ao finalizar mantém a venda na tela com a mesma chave**: tentar de novo nunca duplica.
 - **Forma de pagamento sem padrão**: o operador escolhe a cada venda, para evitar registrar a forma errada.
+
+## Decisões técnicas da Fase 5
+
+- **Envio só no servidor, com o SDK oficial do Resend** (`resend`, dependência prevista na stack). Sem chave ou sem remetente, o alerta vira `falhou` com mensagem clara; nada é simulado.
+- **Exatamente um e-mail por alerta**: a venda, o cron e o botão podem processar a fila ao mesmo tempo. A função `reservar_alertas_para_envio` marca `processando_desde` com `for update skip locked`, e só quem reservou envia. Uma reserva com mais de 10 minutos é considerada abandonada. Além disso, cada tentativa envia uma chave de idempotência ao Resend (`alerta-<id>-<tentativa>`).
+- **Decisão E na prática**: antes de enviar, alerta cujo produto voltou acima do mínimo **ou foi desativado** é resolvido sem e-mail (fecha a pendência da Fase 3).
+- **Service role só no processamento da fila** (`lib/supabase/admin.ts`, `server-only`): o envio é disparado também pela venda do funcionário, que não pode alterar alertas, e pelo cron, que não tem usuário. A função de reserva só pode ser executada pela service role.
+- **Envio depois da resposta** com `after()` do Next: a venda não espera o e-mail e continua válida se ele falhar. O mesmo vale para saída, ajuste, cadastro, edição e reativação de produto, que também podem abrir alertas (decisões C e I).
+- **Alertas desligados ou sem e-mail de destino**: nada é reservado nem contado como tentativa; os alertas ficam `pendente` e a tela de configurações explica o motivo.
+- **Limite de 5 tentativas vale para o cron**; o botão "Reenviar" do proprietário ignora o limite.
+- **Cron diário** (`0 12 * * *`, 9h–10h em Brasília), compatível com o plano Hobby da Vercel. Detalhes no README.
+- **`CRON_SECRET` comparado em tempo constante**; sem segredo configurado, a rota recusa tudo.
+- **Botão "+ Estoque"** no lugar do ícone ⇄ na lista de produtos (pedido do usuário).
+- **Testes** trocam o envio real por um falso (injeção do enviador); o alias de `server-only` no Vitest permite testar os serviços do servidor.

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { formatarMoeda } from "@/lib/format";
+import { enviarAlertasDepoisDaResposta } from "@/lib/services/alertas";
 import { ErroAmigavel } from "@/lib/services/banco";
 import { exigirUsuario } from "@/lib/services/sessao";
 import { registrarVenda } from "@/lib/services/vendas";
@@ -32,8 +33,9 @@ export async function finalizarVendaAcao(entrada: unknown): Promise<RespostaVend
   try {
     const resultado = await registrarVenda(dados.data);
 
-    // Os alertas de estoque baixo criados pela venda (resultado.alertas) serão
-    // enviados por e-mail na Fase 5, sem bloquear esta resposta.
+    // E-mail dos alertas criados pela venda, depois da resposta: a venda não
+    // espera o envio e continua válida mesmo se o e-mail falhar.
+    enviarAlertasDepoisDaResposta(resultado.alertas);
 
     revalidatePath("/caixa");
     revalidatePath("/produtos");

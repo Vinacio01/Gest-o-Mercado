@@ -7,14 +7,14 @@ export type Database = {
           Tables: {
             "alertas_estoque": {
                   Row: {
-                    "created_at": string,"enviado_em": string | null,"estoque_minimo_no_alerta": number,"id": string,"produto_id": string,"quantidade_no_alerta": number,"resolvido_em": string | null,"status": Database["public"]['Enums']["status_alerta"],"tentativas": number,"ultimo_erro": string | null
+                    "created_at": string,"enviado_em": string | null,"estoque_minimo_no_alerta": number,"id": string,"processando_desde": string | null,"produto_id": string,"quantidade_no_alerta": number,"resolvido_em": string | null,"status": Database["public"]['Enums']["status_alerta"],"tentativas": number,"ultimo_erro": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"enviado_em"?: string | null,"estoque_minimo_no_alerta": number,"id"?: string,"produto_id": string,"quantidade_no_alerta": number,"resolvido_em"?: string | null,"status"?: Database["public"]['Enums']["status_alerta"],"tentativas"?: number,"ultimo_erro"?: string | null
+                    "created_at"?: string,"enviado_em"?: string | null,"estoque_minimo_no_alerta": number,"id"?: string,"processando_desde"?: string | null,"produto_id": string,"quantidade_no_alerta": number,"resolvido_em"?: string | null,"status"?: Database["public"]['Enums']["status_alerta"],"tentativas"?: number,"ultimo_erro"?: string | null
                   }
                   Update: {
-                    "created_at"?: string,"enviado_em"?: string | null,"estoque_minimo_no_alerta"?: number,"id"?: string,"produto_id"?: string,"quantidade_no_alerta"?: number,"resolvido_em"?: string | null,"status"?: Database["public"]['Enums']["status_alerta"],"tentativas"?: number,"ultimo_erro"?: string | null
+                    "created_at"?: string,"enviado_em"?: string | null,"estoque_minimo_no_alerta"?: number,"id"?: string,"processando_desde"?: string | null,"produto_id"?: string,"quantidade_no_alerta"?: number,"resolvido_em"?: string | null,"status"?: Database["public"]['Enums']["status_alerta"],"tentativas"?: number,"ultimo_erro"?: string | null
                   }
                   Relationships: [
                     {
@@ -233,6 +233,11 @@ isOneToOne: false
                            },
 "registrar_venda":
 { Args: { "p_chave_idempotencia": string,"p_forma_pagamento": Database["public"]['Enums']["forma_pagamento"],"p_itens": Json }; Returns: Json
+                           },
+"reservar_alertas_para_envio":
+{ Args: { "p_ids"?: (string)[],"p_limite_tentativas"?: number }; Returns: {
+              "alerta_id": string,"produto_estoque_minimo": number,"produto_nome": string,"produto_quantidade": number,"produto_unidade": string,"tentativas_anteriores": number
+            }[]
                            },
 "texto_busca":
 { Args: { "texto": string }; Returns: string

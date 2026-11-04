@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { executarAcao } from "@/lib/acao";
 import type { EstadoFormulario } from "@/lib/estado-formulario";
+import { enviarAlertasDepoisDaResposta } from "@/lib/services/alertas";
 import { registrarMovimentacao } from "@/lib/services/estoque";
 import { exigirProprietario } from "@/lib/services/sessao";
 import { errosPorCampo } from "@/lib/validations/comum";
@@ -39,6 +40,8 @@ export async function registrarMovimentacaoAcao(
 
   return executarAcao(async () => {
     await registrarMovimentacao(dados.data);
+    // Saída ou ajuste podem ter aberto um alerta (decisão C).
+    if (dados.data.tipo !== "entrada") enviarAlertasDepoisDaResposta();
     revalidatePath("/estoque");
     revalidatePath("/produtos");
     return MENSAGEM_SUCESSO[dados.data.tipo];

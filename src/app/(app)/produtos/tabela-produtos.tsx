@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeftRight, PackageSearch, Pencil } from "lucide-react";
+import { PackageSearch, Pencil, Plus } from "lucide-react";
 
 import { IndicadorEstoque } from "@/components/indicador-estoque";
 import { Badge } from "@/components/ui/badge";
@@ -79,14 +79,14 @@ export function TabelaProdutos({ produtos, ehProprietario }: Props) {
               </TableCell>
               {ehProprietario ? (
                 <TableCell>
-                  <div className="flex justify-end gap-1">
-                    <Button variant="ghost" size="icon-sm" asChild>
+                  <div className="flex items-center justify-end gap-1">
+                    <Button variant="outline" size="sm" asChild>
                       <Link
                         href={`/estoque?movimentar=${p.id}&produto=${p.id}`}
                         aria-label={`Movimentar estoque de ${p.nome}`}
-                        title="Movimentar estoque"
+                        title="Entrada, saída ou ajuste de estoque"
                       >
-                        <ArrowLeftRight />
+                        <Plus /> Estoque
                       </Link>
                     </Button>
                     <Button variant="ghost" size="icon-sm" asChild>

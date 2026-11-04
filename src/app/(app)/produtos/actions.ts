@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { executarAcao } from "@/lib/acao";
+import { enviarAlertasDepoisDaResposta } from "@/lib/services/alertas";
 import type { EstadoFormulario } from "@/lib/estado-formulario";
 import {
   alterarSituacaoProduto,
@@ -66,6 +67,7 @@ export async function cadastrarProdutoAcao(
 
   return executarAcao(async () => {
     await cadastrarProduto(dados.data);
+    enviarAlertasDepoisDaResposta(); // nasceu com estoque baixo?
     revalidatePath("/produtos");
     revalidatePath("/estoque");
     return `Produto "${dados.data.nome}" cadastrado.`;
@@ -87,6 +89,7 @@ export async function atualizarProdutoAcao(
 
   return executarAcao(async () => {
     await atualizarProduto(idValido.data, dados.data);
+    enviarAlertasDepoisDaResposta(); // o estoque mínimo pode ter subido (decisão I)
     revalidatePath("/produtos");
     revalidatePath("/estoque");
     return "Alterações salvas.";
@@ -104,6 +107,7 @@ export async function alterarSituacaoProdutoAcao(
 
   return executarAcao(async () => {
     const nome = await alterarSituacaoProduto(dados.data.id, dados.data.ativo);
+    if (dados.data.ativo) enviarAlertasDepoisDaResposta(); // reativado com estoque baixo
     revalidatePath("/produtos");
     revalidatePath("/estoque");
     return dados.data.ativo ? `"${nome}" foi reativado.` : `"${nome}" foi desativado.`;
