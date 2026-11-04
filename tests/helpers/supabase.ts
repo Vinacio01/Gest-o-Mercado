@@ -95,6 +95,14 @@ export async function criarProdutoTeste(
   return data;
 }
 
+/** Remove as vendas (itens e movimentações delas vão junto). */
+export async function removerVendas(ids: string[]) {
+  if (ids.length === 0) return;
+  await admin.from("movimentacoes_estoque").delete().in("venda_id", ids);
+  const { error } = await admin.from("vendas").delete().in("id", ids);
+  if (error) throw error;
+}
+
 /** Remove o produto e o que depende dele (movimentações e alertas). */
 export async function removerProduto(id: string) {
   await admin.from("movimentacoes_estoque").delete().eq("produto_id", id);

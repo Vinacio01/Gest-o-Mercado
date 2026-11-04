@@ -231,6 +231,9 @@ isOneToOne: false
 "registrar_saida_manual":
 { Args: { "p_motivo": string,"p_produto_id": string,"p_quantidade": number }; Returns: string
                            },
+"registrar_venda":
+{ Args: { "p_chave_idempotencia": string,"p_forma_pagamento": Database["public"]['Enums']["forma_pagamento"],"p_itens": Json }; Returns: Json
+                           },
 "texto_busca":
 { Args: { "texto": string }; Returns: string
                            }

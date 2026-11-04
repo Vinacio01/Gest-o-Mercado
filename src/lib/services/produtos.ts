@@ -230,3 +230,19 @@ export async function atualizarCategoria(
   if (data.length === 0) throw new ErroAmigavel("Categoria não encontrada.");
   return data[0].nome;
 }
+
+/**
+ * Produtos ativos para o caixa (sem custo), carregados de uma vez: a busca no
+ * caixa precisa ser instantânea. O estoque mostrado é só uma referência; quem
+ * confere de verdade é registrar_venda, com a linha do produto travada.
+ */
+export async function listarProdutosParaCaixa() {
+  const supabase = await criarClienteServidor();
+  const { data, error } = await supabase
+    .from("produtos_catalogo")
+    .select("id, nome, codigo_barras, unidade, preco_venda, quantidade")
+    .eq("ativo", true)
+    .order("nome");
+  if (error) throw erroDoBanco(error, "listarProdutosParaCaixa");
+  return data;
+}

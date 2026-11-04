@@ -58,3 +58,21 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 - **Saída e ajuste pedem confirmação** mostrando o estoque antes e depois.
 - **Dependência nova: `cmdk`**, instalada pelo componente `Command` do shadcn/ui. Ela serve ao seletor de produto com busca (combobox acessível por teclado), usado no estoque e nos filtros.
 - **Redirecionamento do funcionário** em páginas do proprietário: como o layout tem `loading.tsx`, o Next responde 200 com um redirecionamento embutido no HTML, sem nenhum dado da página. O banco continua sendo a barreira real.
+
+## Aprovadas na Fase 4
+
+| # | Decisão | Motivo |
+|---|---|---|
+| J | Em **Dinheiro**, campo opcional "Valor recebido" que mostra o **troco** (não é gravado) e impede finalizar se o valor for menor que o total | Agiliza o balcão sem mudar o que a venda registra |
+
+## Decisões técnicas da Fase 4
+
+- **`registrar_venda` cria a venda antes dos itens** (`insert ... on conflict (chave_idempotencia) do nothing`). Se a chave já existe, devolve a venda existente com `ja_registrada = true`. Dois envios simultâneos com a mesma chave: o segundo espera o primeiro terminar e devolve a mesma venda.
+- **Itens lidos só por `produto_id` e `quantidade`**: qualquer preço enviado pelo navegador é ignorado. O mesmo produto repetido é somado numa linha.
+- **Travas em ordem de id** e baixa pela mesma `aplicar_movimentacao` da Fase 3. Qualquer falha (sem estoque, desativado, inexistente) desfaz a transação inteira.
+- **Alertas devolvidos pela venda**: o trigger da Fase 3 abre os alertas; a função devolve os criados na própria transação (filtro por `xmin`, o id da transação). O envio por e-mail entra na Fase 5.
+- **Caixa carrega os produtos ativos de uma vez** (sem custo) e busca no navegador, sem diferenciar acentos: a busca precisa ser instantânea. O estoque mostrado é referência; quem confere é o banco. Depois de cada venda a lista é recarregada.
+- **Carrinho em `lib/caixa.ts`**, sem React e testado: total e troco em centavos inteiros. O total que vale é o do banco.
+- **Atalhos**: Enter adiciona (código exato ou resultado destacado; setas mudam o destaque), F2 finaliza, Esc limpa a busca ou pede confirmação para cancelar a venda.
+- **Erro ao finalizar mantém a venda na tela com a mesma chave**: tentar de novo nunca duplica.
+- **Forma de pagamento sem padrão**: o operador escolhe a cada venda, para evitar registrar a forma errada.
