@@ -90,3 +90,21 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 - **`CRON_SECRET` comparado em tempo constante**; sem segredo configurado, a rota recusa tudo.
 - **Botão "+ Estoque"** no lugar do ícone ⇄ na lista de produtos (pedido do usuário).
 - **Testes** trocam o envio real por um falso (injeção do enviador); o alias de `server-only` no Vitest permite testar os serviços do servidor.
+
+## Aprovadas na Fase 6
+
+| # | Decisão | Motivo |
+|---|---|---|
+| K | **Hoje x ontem até a mesma hora** | Comparar a manhã de hoje com o dia inteiro de ontem mostraria queda falsa |
+| L | **Rodada visual depois da Fase 6**, antes do deploy (o usuário achou o design genérico) | A demo vai ao ar já com o visual novo; cores ficam em tokens do tema |
+
+## Decisões técnicas da Fase 6
+
+- **Mesmo trecho de tempo em todas as comparações** (estende K): 7 e 30 dias comparam com a janela anterior de mesmo tamanho; "Este mês" com o mês anterior até o mesmo dia **e hora**; se o mês anterior não tem aquele dia (31/03 x fevereiro), vai até o fim dele. "Mês anterior" compara meses inteiros.
+- **Períodos calculados em `lib/periodos.ts`** (funções puras, testadas) e enviados prontos ao banco; **somas e agrupamentos no banco** (`resumo_vendas`, `faturamento_por_dia`, `faturamento_por_mes`, `top_produtos`, `vendas_por_forma`). Nenhuma venda individual vai para o navegador.
+- **Funções de indicadores com `security invoker`**: valem o RLS de vendas e, além disso, recusam quem não é proprietário com erro 42501.
+- **Variação sem base** (período anterior sem vendas) mostra "—" em vez de um percentual infinito.
+- **Margem bruta** exibida junto ao lucro bruto estimado; o bloco avisa que não desconta despesas.
+- **Gráficos** (Recharts) de série única, sem legenda, barras de até 24px com ponta arredondada, grade discreta, tooltip e "Ver dados em tabela" para acessibilidade. Cor única `--chart-1` (azul validado), trocável na rodada visual.
+- **Seed coerente**: escreve o histórico com as datas do passado (por isso desliga os triggers de alerta durante o script e avalia os alertas no fim). Recusa rodar duas vezes. `limpar-dados.sql` roda num único bloco (tudo ou nada).
+- **`supabase db query -f`** executa um comando por arquivo: por isso os scripts SQL são um único bloco `do $$ ... $$`.

@@ -222,6 +222,16 @@ isOneToOne: false
 "exigir_proprietario":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            },
+"faturamento_por_dia":
+{ Args: { "p_fim": string,"p_inicio": string }; Returns: {
+              "dia": string,"faturamento": number,"quantidade_vendas": number
+            }[]
+                           },
+"faturamento_por_mes":
+{ Args: { "p_meses"?: number,"p_referencia": string }; Returns: {
+              "faturamento": number,"mes": string,"quantidade_vendas": number
+            }[]
+                           },
 "registrar_ajuste":
 { Args: { "p_motivo": string,"p_nova_quantidade": number,"p_produto_id": string }; Returns: string
                            },
@@ -239,8 +249,23 @@ isOneToOne: false
               "alerta_id": string,"produto_estoque_minimo": number,"produto_nome": string,"produto_quantidade": number,"produto_unidade": string,"tentativas_anteriores": number
             }[]
                            },
+"resumo_vendas":
+{ Args: { "p_fim": string,"p_inicio": string }; Returns: {
+              "custo": number,"faturamento": number,"lucro_bruto": number,"quantidade_vendas": number,"ticket_medio": number
+            }[]
+                           },
 "texto_busca":
 { Args: { "texto": string }; Returns: string
+                           },
+"top_produtos":
+{ Args: { "p_fim": string,"p_inicio": string,"p_limite"?: number }; Returns: {
+              "faturamento": number,"nome": string,"produto_id": string,"quantidade": number,"unidade": string
+            }[]
+                           },
+"vendas_por_forma":
+{ Args: { "p_fim": string,"p_inicio": string }; Returns: {
+              "faturamento": number,"forma_pagamento": Database["public"]['Enums']["forma_pagamento"],"quantidade_vendas": number
+            }[]
                            }
           }
           Enums: {

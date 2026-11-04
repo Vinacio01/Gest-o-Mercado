@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "usuarios:dev": "node scripts/criar-usuarios-dev.mts",
     "db:tipos": "supabase gen types typescript --local --schema public > src/types/database.ts",
-    "db:reset": "supabase db reset"
+    "db:reset": "supabase db reset",
+    "db:demo": "supabase db query -f supabase/seed-demo.sql",
+    "db:limpar": "supabase db query -f supabase/limpar-dados.sql"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -26,6 +28,7 @@
     "radix-ui": "^1.8.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "recharts": "^3.10.1",
     "resend": "^6.37.0",
     "server-only": "^0.0.1",
     "shadcn": "^4.23.0",

@@ -72,3 +72,29 @@ Para testar a rota localmente:
 ```bash
 curl -H "Authorization: Bearer <CRON_SECRET do .env.local>" http://localhost:3000/api/cron/alertas
 ```
+
+## Dados de demonstração
+
+`supabase/seed-demo.sql` cria 7 categorias, 30 produtos de mercadinho e cerca de 90 dias de vendas (crescimento leve entre os meses, sábado forte, domingo fraco, algumas vendas canceladas) e deixa 5 produtos abaixo do estoque mínimo. O histórico é coerente: cada venda baixa o estoque e tem sua movimentação; reposições aparecem como entradas.
+
+**Nunca roda sozinho.** Pré-requisito: um usuário proprietário já criado.
+
+| Onde | Como rodar |
+|---|---|
+| Local | `npm run db:demo` |
+| Produção (Supabase) | Abra **SQL Editor**, cole o conteúdo de `supabase/seed-demo.sql` e clique em **Run** |
+
+Os produtos da demonstração usam códigos de barras `2000000000xxx`; rodar duas vezes é recusado. Os alertas dos produtos com estoque baixo ficam **pendentes** e serão enviados para o e-mail configurado pelo próximo cron ou pelo botão "Reenviar".
+
+### Limpar antes do uso real
+
+`supabase/limpar-dados.sql` **apaga todas** as vendas, movimentações, alertas, produtos e categorias (mantém usuários e configurações). Não tem volta.
+
+| Onde | Como rodar |
+|---|---|
+| Local | `npm run db:limpar` |
+| Produção (Supabase) | Cole `supabase/limpar-dados.sql` no **SQL Editor** e clique em **Run** |
+
+## Painel
+
+Indicadores calculados no banco (funções SQL em `supabase/migrations/20261104000700_indicadores.sql`), sempre sem as vendas canceladas e no fuso de São Paulo. A comparação usa o **mesmo trecho de tempo** do período anterior: às 15h do dia 3, "Este mês" (1º a 3, até 15h) é comparado com 1º a 3 do mês anterior até 15h; "Hoje" com ontem até a mesma hora. O **lucro bruto estimado** é faturamento menos o custo das mercadorias vendidas; não desconta despesas.

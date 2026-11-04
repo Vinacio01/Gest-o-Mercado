@@ -137,3 +137,20 @@ export function diaSeguinte(dia: string): string {
   const [ano, mes, d] = dia.split("-").map(Number);
   return new Date(Date.UTC(ano, mes - 1, d + 1)).toISOString().slice(0, 10);
 }
+
+/** Soma (ou subtrai) dias a "aaaa-mm-dd". */
+export function somarDias(dia: string, dias: number): string {
+  const [ano, mes, d] = dia.split("-").map(Number);
+  return new Date(Date.UTC(ano, mes - 1, d + dias)).toISOString().slice(0, 10);
+}
+
+const formatadorHora = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: FUSO_HORARIO,
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+/** Hora "hh:mm" no fuso de São Paulo. */
+export function formatarHora(data: Date | string): string {
+  return formatadorHora.format(new Date(data));
+}
