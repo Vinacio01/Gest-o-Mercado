@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { EmConstrucao } from "@/components/em-construcao";
+import { exigirProprietario } from "@/lib/services/sessao";
 
 export const metadata: Metadata = { title: "Painel" };
 
-export default function PaginaPainel() {
+export default async function PaginaPainel() {
+  await exigirProprietario();
+
   return (
     <>
       <CabecalhoPagina

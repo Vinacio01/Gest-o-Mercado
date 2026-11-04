@@ -1,6 +1,7 @@
 import { createBrowserClient } from "@supabase/ssr";
 
 import { lerEnvPublico } from "@/lib/env";
+import type { Database } from "@/types/database";
 
 /**
  * Cliente do Supabase para Client Components (roda no navegador).
@@ -8,7 +9,7 @@ import { lerEnvPublico } from "@/lib/env";
  */
 export function criarClienteNavegador() {
   const env = lerEnvPublico();
-  return createBrowserClient(
+  return createBrowserClient<Database>(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   );

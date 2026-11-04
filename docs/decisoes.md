@@ -20,4 +20,17 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 - **`cn`**: instalado pelo próprio shadcn/ui (repositório `shadcn-ui/cn`); substitui `clsx` + `tailwind-merge`.
 - **Cache Components desligado** (`next.config.ts`): o template do Next 16.4 liga por padrão. Como quase toda tela depende do usuário logado e do RLS, renderizamos por requisição. Isso simplifica o código e elimina o risco de cache compartilhar dados entre usuários.
 - **`@types/node@24`**: o template vinha com a v20, incompatível com o Vitest 5. A v24 corresponde ao Node LTS usado pela Vercel.
-- **Proxy (antigo middleware)**: no Next 16 o arquivo se chama `src/proxy.ts`. O helper de sessão já existe (`src/lib/supabase/middleware.ts`), mas o proxy só é ligado na Fase 2, junto com o login.
+- **Proxy (antigo middleware)**: no Next 16 o arquivo se chama `src/proxy.ts`.
+
+## Decisões técnicas da Fase 2
+
+- **Privilégio mínimo no banco**: a migration de segurança retira todas as permissões padrão que o Supabase dá a `anon` e `authenticated` e concede de volta só o necessário. Tabelas e funções novas nascem fechadas.
+- **Funcionário lê produtos pela view `produtos_catalogo`**, que não tem colunas de custo. A tabela `produtos` só é lida pelo proprietário. A view roda com os direitos do dono e se protege com o filtro `eh_usuario_ativo()`; o linter do Supabase avisa "security definer view" e isso é intencional.
+- **`quantidade` fora das colunas liberadas** para insert e update. Produto novo nasce com estoque 0; a quantidade inicial entra por uma movimentação de entrada (Fase 3).
+- **Sem delete pela API** em produtos e categorias: são desativados.
+- **Papel e situação do usuário só mudam pelo painel do Supabase**: não há política de update em `perfis`, então o funcionário não consegue se promover.
+- **Cadastro público desligado** (`enable_signup = false` no `supabase/config.toml`). **Em produção, desligar também no painel**: Authentication > Sign In / Providers > "Allow new users to sign up".
+- **Usuário desativado** continua conseguindo autenticar no Auth, mas o RLS não devolve nada para ele, e o app mostra "Seu usuário está desativado".
+- **Checagem de papel em três camadas**: o proxy só garante que há sessão; `exigirProprietario()` em cada página do proprietário redireciona o funcionário para `/caixa`; o RLS garante o resto.
+- **Excluir um usuário que já registrou movimentações ou vendas é bloqueado** pelas chaves estrangeiras. O caminho é desativar (`perfis.ativo = false`), o que preserva o histórico.
+- **Usuários de desenvolvimento**: `npm run usuarios:dev` cria um proprietário e um funcionário só no Supabase local (o script recusa outra URL). As credenciais estão em `scripts/criar-usuarios-dev.mts`.

@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 
-// Fase 2: o destino passará a depender do papel
-// (proprietário -> /painel, funcionário -> /caixa).
-export default function Inicio() {
-  redirect("/painel");
+import { destinoInicial, exigirUsuario } from "@/lib/services/sessao";
+
+// Proprietário vai para o painel; funcionário vai para o caixa.
+export default async function Inicio() {
+  const usuario = await exigirUsuario();
+  redirect(destinoInicial(usuario.papel));
 }

@@ -7,6 +7,7 @@ import { Store } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -23,9 +24,11 @@ type Props = {
    * ícones são componentes e não podem ser enviados do servidor ao cliente.
    */
   hrefsPermitidos: readonly string[];
+  /** Conteúdo do rodapé (usuário logado e botão de sair), vindo do servidor. */
+  rodape: React.ReactNode;
 };
 
-export function AppSidebar({ hrefsPermitidos }: Props) {
+export function AppSidebar({ hrefsPermitidos, rodape }: Props) {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
   const itens = ITENS_NAVEGACAO.filter((item) =>
@@ -67,6 +70,8 @@ export function AppSidebar({ hrefsPermitidos }: Props) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter>{rodape}</SidebarFooter>
     </Sidebar>
   );
 }

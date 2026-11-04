@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 
 import { CabecalhoPagina } from "@/components/cabecalho-pagina";
 import { EmConstrucao } from "@/components/em-construcao";
+import { exigirProprietario } from "@/lib/services/sessao";
 
 export const metadata: Metadata = { title: "Configurações" };
 
-export default function PaginaConfiguracoes() {
+export default async function PaginaConfiguracoes() {
+  await exigirProprietario();
+
   return (
     <>
       <CabecalhoPagina

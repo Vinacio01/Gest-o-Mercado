@@ -9,7 +9,10 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "usuarios:dev": "node scripts/criar-usuarios-dev.mts",
+    "db:tipos": "supabase gen types typescript --local --schema public > src/types/database.ts",
+    "db:reset": "supabase db reset"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
