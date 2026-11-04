@@ -1,0 +1,37 @@
+import { cookies } from "next/headers";
+
+import { AppSidebar } from "@/components/app-sidebar";
+import { Separator } from "@/components/ui/separator";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { ITENS_NAVEGACAO } from "@/lib/navegacao";
+
+export default async function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // Lembra se a sidebar estava recolhida (cookie gravado pelo próprio componente).
+  const cookieStore = await cookies();
+  const sidebarAberta = cookieStore.get("sidebar_state")?.value !== "false";
+
+  // Fase 2: os itens passarão a ser filtrados pelo papel do usuário logado.
+  const hrefsPermitidos = ITENS_NAVEGACAO.map((item) => item.href);
+
+  return (
+    <SidebarProvider defaultOpen={sidebarAberta}>
+      <AppSidebar hrefsPermitidos={hrefsPermitidos} />
+      <SidebarInset>
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <span className="text-sm text-muted-foreground">Estoque Mercadinho</span>
+        </header>
+        <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}
