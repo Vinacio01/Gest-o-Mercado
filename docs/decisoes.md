@@ -118,7 +118,7 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 
 - **Selo oval refeito em código** (`components/selo-iracema.tsx`), sem usar a imagem da placa. A foto das frutas não entra nas telas: a especificação pede interface limpa e sem enfeites.
 - **Paleta** em `globals.css` (Folha `#1f4a2c`, Iracema `#b3141c`, Broto `#2f7a3f`, Laranja `#e07a1f`, Limão `#f2c230`, fundo `#f6f7f3`), com contraste conferido (AA). Só tema claro.
-- **Tipografia**: Zilla Slab (serifa pesada, como o "IRACEMA" da placa) para logo, títulos e números grandes; Source Sans 3 para interface e tabelas.
+- **Tipografia**: Zilla Slab (serifa pesada, como o "IRACEMA" da placa) só para logo e títulos; Source Sans 3 para interface, tabelas e **todos os números** (utilitário `numero`: negrito com algarismos alinhados e tabulares). Os algarismos da Zilla variam de altura e ficavam irregulares nos valores (pedido do usuário).
 - **Um ponto de destaque**: o total do caixa em vermelho com serifa, como placa de preço de fruteira.
 - **Vermelho significa redução ou problema** (variação negativa, saída, falha); por isso gráficos, "Entrada", "Enviado" e o interruptor ligado usam o verde Broto, nunca o vermelho da marca.
 - **Cabeçalho** mostra a data de hoje no lugar do nome do sistema (útil para quem está no caixa).

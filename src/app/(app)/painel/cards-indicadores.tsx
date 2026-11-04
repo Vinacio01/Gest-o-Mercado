@@ -28,7 +28,7 @@ function Indicador({
     <Card className="gap-0 py-4">
       <CardContent className="space-y-1 px-4">
         <p className="text-sm text-muted-foreground">{rotulo}</p>
-        {valor !== undefined ? <p className="font-display text-3xl font-bold">{valor}</p> : null}
+        {valor !== undefined ? <p className="numero text-3xl">{valor}</p> : null}
         {children}
         {detalhe ? <p className="text-xs text-muted-foreground">{detalhe}</p> : null}
       </CardContent>
@@ -40,7 +40,7 @@ function Indicador({
 function Variacao({ atual, anterior }: { atual: number; anterior: number }) {
   const v = variacaoPercentual(atual, anterior);
   if (v === null) {
-    return <p className="font-display text-3xl font-bold text-muted-foreground">—</p>;
+    return <p className="numero text-3xl text-muted-foreground">—</p>;
   }
   const subiu = v > 0;
   const caiu = v < 0;
@@ -48,7 +48,7 @@ function Variacao({ atual, anterior }: { atual: number; anterior: number }) {
   return (
     <p
       className={cn(
-        "flex items-center gap-1 font-display text-3xl font-bold",
+        "flex items-center gap-1 numero text-3xl",
         subiu && "text-broto",
         caiu && "text-destructive",
       )}
@@ -115,7 +115,7 @@ export function CardsIndicadores({ indicadores, descricaoAnterior, rotuloPeriodo
         >
           <p
             className={cn(
-              "flex items-center gap-2 font-display text-3xl font-bold",
+              "flex items-center gap-2 numero text-3xl",
               produtosEstoqueBaixo > 0 && "text-laranja-texto",
             )}
           >

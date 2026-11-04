@@ -39,7 +39,7 @@ export function BlocoFinanceiro({ resumo, rotuloPeriodo }: { resumo: Resumo; rot
           <div className="flex items-baseline justify-between gap-4 pt-3">
             <dt className="font-medium">Lucro bruto estimado</dt>
             <dd className="text-right">
-              <span className="font-display text-2xl font-bold text-folha">
+              <span className="numero text-2xl text-folha">
                 {formatarCentavos(resumo.lucroBruto)}
               </span>
               {margem !== null ? (

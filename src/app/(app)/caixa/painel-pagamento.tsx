@@ -55,7 +55,7 @@ export function PainelPagamento({
         <div>
           <p className="text-sm text-muted-foreground">Total</p>
           {/* Como a placa de preço da fruteira: número grande, vermelho, em serifa. */}
-          <p className="font-display text-6xl leading-none font-bold text-iracema" aria-live="polite">
+          <p className="numero text-6xl leading-none text-iracema" aria-live="polite">
             {formatarCentavos(totalCentavos)}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
