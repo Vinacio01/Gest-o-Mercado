@@ -28,7 +28,7 @@ function Indicador({
     <Card className="gap-0 py-4">
       <CardContent className="space-y-1 px-4">
         <p className="text-sm text-muted-foreground">{rotulo}</p>
-        {valor !== undefined ? <p className="text-2xl font-semibold tracking-tight">{valor}</p> : null}
+        {valor !== undefined ? <p className="font-display text-3xl font-bold">{valor}</p> : null}
         {children}
         {detalhe ? <p className="text-xs text-muted-foreground">{detalhe}</p> : null}
       </CardContent>
@@ -40,7 +40,7 @@ function Indicador({
 function Variacao({ atual, anterior }: { atual: number; anterior: number }) {
   const v = variacaoPercentual(atual, anterior);
   if (v === null) {
-    return <p className="text-2xl font-semibold tracking-tight text-muted-foreground">—</p>;
+    return <p className="font-display text-3xl font-bold text-muted-foreground">—</p>;
   }
   const subiu = v > 0;
   const caiu = v < 0;
@@ -48,9 +48,9 @@ function Variacao({ atual, anterior }: { atual: number; anterior: number }) {
   return (
     <p
       className={cn(
-        "flex items-center gap-1 text-2xl font-semibold tracking-tight",
-        subiu && "text-emerald-600 dark:text-emerald-400",
-        caiu && "text-red-600 dark:text-red-400",
+        "flex items-center gap-1 font-display text-3xl font-bold",
+        subiu && "text-broto",
+        caiu && "text-destructive",
       )}
     >
       <Icone className="size-6" aria-hidden="true" />
@@ -115,8 +115,8 @@ export function CardsIndicadores({ indicadores, descricaoAnterior, rotuloPeriodo
         >
           <p
             className={cn(
-              "flex items-center gap-2 text-2xl font-semibold tracking-tight",
-              produtosEstoqueBaixo > 0 && "text-amber-700 dark:text-amber-400",
+              "flex items-center gap-2 font-display text-3xl font-bold",
+              produtosEstoqueBaixo > 0 && "text-laranja-texto",
             )}
           >
             {produtosEstoqueBaixo > 0 ? <PackageX className="size-6" aria-hidden="true" /> : null}

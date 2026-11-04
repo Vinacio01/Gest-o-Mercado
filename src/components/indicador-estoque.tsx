@@ -16,7 +16,7 @@ export function IndicadorEstoque({ quantidade, estoqueMinimo, unidade }: Props) 
       {quantidade === 0 ? (
         <Badge variant="destructive">Sem estoque</Badge>
       ) : quantidade <= estoqueMinimo ? (
-        <Badge className="bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+        <Badge className="bg-laranja/15 text-laranja-texto">
           Baixo
         </Badge>
       ) : null}

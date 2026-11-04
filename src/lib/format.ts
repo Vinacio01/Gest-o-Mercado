@@ -154,3 +154,15 @@ const formatadorHora = new Intl.DateTimeFormat(LOCALE, {
 export function formatarHora(data: Date | string): string {
   return formatadorHora.format(new Date(data));
 }
+
+const formatadorDiaPorExtenso = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: FUSO_HORARIO,
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+});
+
+/** "terça-feira, 4 de novembro" no fuso de São Paulo. */
+export function formatarDiaPorExtenso(data: Date | string): string {
+  return formatadorDiaPorExtenso.format(new Date(data));
+}

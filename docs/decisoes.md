@@ -108,3 +108,17 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 - **Gráficos** (Recharts) de série única, sem legenda, barras de até 24px com ponta arredondada, grade discreta, tooltip e "Ver dados em tabela" para acessibilidade. Cor única `--chart-1` (azul validado), trocável na rodada visual.
 - **Seed coerente**: escreve o histórico com as datas do passado (por isso desliga os triggers de alerta durante o script e avalia os alertas no fim). Recusa rodar duas vezes. `limpar-dados.sql` roda num único bloco (tudo ou nada).
 - **`supabase db query -f`** executa um comando por arquivo: por isso os scripts SQL são um único bloco `do $$ ... $$`.
+
+## Rodada visual (entre as Fases 6 e 7)
+
+| # | Decisão | Motivo |
+|---|---|---|
+| M | Identidade da **Mini Mercado e Fruteira Iracema**, direção **"Hortifrúti"**: sidebar verde-folha, vermelho Iracema nas ações principais | Escolha do usuário a partir da placa da loja; tira a cara de template |
+| N | O sistema mostra o **nome da loja** (selo oval no login e na sidebar; aba "… \| Iracema") | Escolha do usuário. Telefone e Facebook da placa ficam de fora |
+
+- **Selo oval refeito em código** (`components/selo-iracema.tsx`), sem usar a imagem da placa. A foto das frutas não entra nas telas: a especificação pede interface limpa e sem enfeites.
+- **Paleta** em `globals.css` (Folha `#1f4a2c`, Iracema `#b3141c`, Broto `#2f7a3f`, Laranja `#e07a1f`, Limão `#f2c230`, fundo `#f6f7f3`), com contraste conferido (AA). Só tema claro.
+- **Tipografia**: Zilla Slab (serifa pesada, como o "IRACEMA" da placa) para logo, títulos e números grandes; Source Sans 3 para interface e tabelas.
+- **Um ponto de destaque**: o total do caixa em vermelho com serifa, como placa de preço de fruteira.
+- **Vermelho significa redução ou problema** (variação negativa, saída, falha); por isso gráficos, "Entrada", "Enviado" e o interruptor ligado usam o verde Broto, nunca o vermelho da marca.
+- **Cabeçalho** mostra a data de hoje no lugar do nome do sistema (útil para quem está no caixa).

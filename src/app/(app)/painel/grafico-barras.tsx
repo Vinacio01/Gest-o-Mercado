@@ -130,7 +130,7 @@ export function GraficoBarras({
                 <YAxis
                   type="category"
                   dataKey="rotulo"
-                  width={140}
+                  width={190}
                   tickLine={false}
                   axisLine={false}
                   tick={{ fill: "var(--foreground)", fontSize: 12 }}

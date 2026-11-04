@@ -13,12 +13,14 @@ import { formatarDataHora } from "@/lib/format";
 import type { Movimentacao } from "@/lib/services/estoque";
 import { ROTULO_TIPO } from "@/lib/validations/estoque";
 
-const ESTILO_TIPO: Record<Movimentacao["tipo"], "default" | "secondary" | "outline" | "destructive"> = {
-  entrada: "default",
-  cancelamento_venda: "secondary",
-  venda: "outline",
-  saida_manual: "destructive",
-  ajuste: "secondary",
+// Cor pelo sentido: entra estoque = verde (Broto), sai = vermelho, venda e
+// ajuste neutros. Vermelho no sistema sempre quer dizer redução ou problema.
+const ESTILO_TIPO: Record<Movimentacao["tipo"], string> = {
+  entrada: "bg-broto text-white",
+  cancelamento_venda: "bg-broto/15 text-broto",
+  venda: "border-border bg-transparent text-foreground",
+  saida_manual: "bg-destructive/10 text-destructive",
+  ajuste: "bg-secondary text-secondary-foreground",
 };
 
 /** "+10", "−3" ou "= 25" (ajuste registra o novo total). */
@@ -63,7 +65,7 @@ export function TabelaMovimentacoes({ movimentacoes }: { movimentacoes: Moviment
               </TableCell>
               <TableCell className="max-w-56 truncate font-medium">{m.produto_nome}</TableCell>
               <TableCell>
-                <Badge variant={ESTILO_TIPO[m.tipo]}>{ROTULO_TIPO[m.tipo]}</Badge>
+                <Badge className={ESTILO_TIPO[m.tipo]}>{ROTULO_TIPO[m.tipo]}</Badge>
               </TableCell>
               <TableCell className="text-right tabular-nums">{quantidadeComSinal(m)}</TableCell>
               <TableCell className="hidden text-right tabular-nums sm:table-cell">

@@ -75,7 +75,7 @@ export default async function PaginaPainel({ searchParams }: PageProps<"/painel"
     detalhe: plural(m.vendas, "venda", "vendas"),
   }));
   const top: Ponto[] = indicadores.topProdutos.map((p) => ({
-    rotulo: p.nome.length > 20 ? `${p.nome.slice(0, 19)}…` : p.nome,
+    rotulo: p.nome.length > 26 ? `${p.nome.slice(0, 25)}…` : p.nome,
     rotuloCompleto: p.nome,
     valor: p.quantidade,
     detalhe: `${p.unidade} vendidos`,

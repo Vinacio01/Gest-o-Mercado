@@ -13,7 +13,7 @@ import { formatarDataHora } from "@/lib/format";
 import type { AlertaRecente } from "@/lib/services/configuracoes";
 
 function SituacaoAlerta({ alerta }: { alerta: AlertaRecente }) {
-  if (alerta.status === "enviado") return <Badge>Enviado</Badge>;
+  if (alerta.status === "enviado") return <Badge className="bg-broto text-white">Enviado</Badge>;
   if (alerta.resolvido_em) return <Badge variant="outline">Resolvido sem envio</Badge>;
   if (alerta.status === "falhou") return <Badge variant="destructive">Falhou</Badge>;
   return <Badge variant="secondary">Pendente</Badge>;

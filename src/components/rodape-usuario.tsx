@@ -19,7 +19,7 @@ export function RodapeUsuario({ usuario }: Props) {
       <SidebarMenuItem>
         <div className="px-2 py-1.5 group-data-[collapsible=icon]:hidden">
           <p className="truncate text-sm font-medium">{usuario.nome}</p>
-          <p className="truncate text-xs text-muted-foreground">
+          <p className="truncate text-xs text-sidebar-foreground/70">
             {ROTULO_PAPEL[usuario.papel]}
           </p>
         </div>

@@ -8,8 +8,15 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-heading: var(--font-display);
+  --font-display: var(--font-display);
+  --color-folha: var(--folha);
+  --color-iracema: var(--iracema);
+  --color-broto: var(--broto);
+  --color-laranja: var(--laranja);
+  --color-laranja-texto: var(--laranja-texto);
+  --color-limao: var(--limao);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,73 +55,56 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+ * Identidade visual da Mini Mercado e Fruteira Iracema (direção "Hortifrúti").
+ * Cores da marca tiradas da placa da loja; contrastes conferidos (AA).
+ *   Folha   #1f4a2c  sidebar
+ *   Iracema #b3141c  ações principais, logo, preço do caixa
+ *   Broto   #2f7a3f  sucesso e gráficos (validado para série única)
+ *   Laranja #e07a1f  estoque baixo (texto: #b45a0e)
+ *   Limão   #f2c230  marca do item ativo na sidebar
+ * O sistema usa só o tema claro (não há alternância de tema).
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: #2a78d6; /* série única dos gráficos (paleta validada: dataviz) */
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+  --folha: #1f4a2c;
+  --iracema: #b3141c;
+  --broto: #2f7a3f;
+  --laranja: #e07a1f;
+  --laranja-texto: #b45a0e;
+  --limao: #f2c230;
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: #3987e5;
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #f6f7f3;
+  --foreground: #1c2420;
+  --card: #ffffff;
+  --card-foreground: #1c2420;
+  --popover: #ffffff;
+  --popover-foreground: #1c2420;
+  --primary: var(--iracema);
+  --primary-foreground: #ffffff;
+  --secondary: #e8efe6;
+  --secondary-foreground: #1f4a2c;
+  --muted: #eef1ec;
+  --muted-foreground: #5b6560;
+  --accent: #e8efe6;
+  --accent-foreground: #1f4a2c;
+  --destructive: #c2261e;
+  --border: #dde3da;
+  --input: #cfd7cc;
+  --ring: #2f7a3f;
+  --chart-1: var(--broto); /* série única dos gráficos (validada: dataviz) */
+  --chart-2: #e07a1f;
+  --chart-3: #f2c230;
+  --chart-4: #1f4a2c;
+  --chart-5: #b3141c;
+  --radius: 0.5rem;
+  --sidebar: var(--folha);
+  --sidebar-foreground: #f4f1e6;
+  --sidebar-primary: var(--limao);
+  --sidebar-primary-foreground: #1f4a2c;
+  --sidebar-accent: #2b5e39;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #2f5a3b;
+  --sidebar-ring: var(--limao);
 }
 
 @layer base {

@@ -70,7 +70,7 @@ export function BuscaProduto({ produtos, aoEscolher, aoNaoEncontrar, ref }: Prop
         }}
         onKeyDown={aoTeclar}
         placeholder="Leia o código de barras ou digite o nome do produto"
-        className="h-12 pl-11 text-base md:text-base"
+        className="h-12 pr-11 pl-11 text-base md:text-base"
         aria-label="Buscar produto"
         aria-controls="resultados-caixa"
         aria-activedescendant={resultados[destaque] ? `resultado-${resultados[destaque].id}` : undefined}

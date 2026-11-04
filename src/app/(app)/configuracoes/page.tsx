@@ -17,7 +17,7 @@ function ItemStatus({ ok, texto }: { ok: boolean; texto: string }) {
   return (
     <li className="flex items-center gap-2 text-sm">
       {ok ? (
-        <CircleCheck className="size-4 text-emerald-600" />
+        <CircleCheck className="size-4 text-broto" />
       ) : (
         <CircleAlert className="size-4 text-destructive" />
       )}
@@ -53,9 +53,9 @@ export default async function PaginaConfiguracoes() {
       {motivoSemEnvio ? (
         <div
           role="alert"
-          className="flex gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200"
+          className="flex gap-3 rounded-lg border border-laranja/50 bg-laranja/10 p-4 text-sm text-foreground"
         >
-          <CircleAlert className="mt-0.5 size-4 shrink-0" />
+          <CircleAlert className="mt-0.5 size-4 shrink-0 text-laranja-texto" />
           <p>
             <strong>Nenhum e-mail está sendo enviado.</strong> {motivoSemEnvio}
           </p>
