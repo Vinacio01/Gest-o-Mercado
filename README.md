@@ -2,7 +2,7 @@
 
 Sistema de caixa, controle de estoque e painel financeiro para a **Mini Mercado e Fruteira Iracema**, um mercadinho de bairro em Caxias do Sul (RS).
 
-**Demo no ar:** _endereço publicado ao fim da Fase 7_
+**Demo no ar:** https://gest-o-mercado.vercel.app (acesso com usuário e senha; não há cadastro público)
 
 ## O problema
 
