@@ -233,3 +233,20 @@ describe("usuário desativado", () => {
     }
   });
 });
+
+describe("funções nascem fechadas para o anônimo", () => {
+  // A recusa tem que vir do PRIVILÉGIO do banco ("permission denied"), e não
+  // só da checagem de papel dentro da função: privilégio mínimo.
+  it.each([
+    ["registrar_venda", { p_chave_idempotencia: crypto.randomUUID(), p_forma_pagamento: "pix", p_itens: [] }],
+    ["cancelar_venda", { p_venda_id: crypto.randomUUID(), p_motivo: "x" }],
+    ["registrar_entrada", { p_produto_id: crypto.randomUUID(), p_quantidade: 1 }],
+    ["cadastrar_produto", { p_nome: "x", p_preco_venda: 1 }],
+    ["resumo_vendas", { p_inicio: "2020-01-01T00:00:00Z", p_fim: "2020-01-02T00:00:00Z" }],
+    ["eh_proprietario", {}],
+  ])("anônimo não executa %s", async (funcao, args) => {
+    const { error } = await clienteAnonimo().rpc(funcao as "eh_proprietario", args as never);
+    expect(error?.code).toBe("42501");
+    expect(error?.message).toMatch(/permission denied for function/);
+  });
+});

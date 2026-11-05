@@ -131,3 +131,16 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 - **Chaves novas do Supabase** (*publishable* e *secret*) no lugar das antigas (*anon* e *service_role*); o código funciona com as duas.
 - **Lição**: o comando `supabase projects api-keys` devolve a chave secreta **mascarada**; é preciso `--reveal`. A chave mascarada na Vercel fez o cron e o botão "Reenviar" falharem com 500 até a troca.
 - **Dados de demonstração** carregados em produção com `supabase/seed-demo.sql`.
+
+## Fase 8: histórico de vendas e cancelamento
+
+- **`cancelar_venda(venda_id, motivo)`** (só proprietário): trava a venda (`for update`), recusa venda inexistente ou já cancelada, grava quem, quando e por quê, e devolve cada item ao estoque pela mesma `aplicar_movimentacao` (movimentação `cancelamento_venda`). Uma transação só. O trigger de alertas resolve o alerta aberto se o estoque voltar acima do mínimo (decisão D).
+- **Travas sempre na mesma ordem** (venda, depois produtos por id), igual a `registrar_venda`: sem deadlock entre venda e cancelamento. Dois cancelamentos simultâneos: o segundo espera e recusa.
+- **Qualquer venda pode ser cancelada**, sem prazo (a especificação não define limite). A venda cancelada continua no histórico, riscada, e sai de todos os indicadores.
+- **Histórico** com filtros na URL (período no fuso de São Paulo, forma, situação), 50 por página; linha inteira clicável para o detalhe. Código curto da venda = 8 primeiros caracteres do id.
+- **O diálogo de cancelamento é a confirmação**: diz o que vai acontecer e exige motivo. Cada abertura começa limpa; um erro do banco (ex.: já cancelada em outra aba) recarrega a página.
+
+### Code review por agente separado
+
+- Antes do commit, um segundo agente (sem o contexto de quem escreveu) revisou o diff da fase. Não achou bug grave em concorrência, estorno ou segurança. Achados aplicados: teste de indicadores mais completo e sem depender do relógio do Node, diálogo que recarregava errado depois de erro, revalidação de `/configuracoes` e testes de anônimo e de produto desativado. Aceito como está: link de linha inteira (`position: relative` em `<tr>`), que funciona nos navegadores atuais.
+- **Achado derivado**: `alter default privileges ... in schema public revoke execute ... from public` **não** retira o EXECUTE padrão de PUBLIC (o default por schema só acrescenta). Todas as funções criadas depois da Fase 2 estavam executáveis pelo anônimo; não era explorável (cada função recusa o anônimo no início), mas feria o privilégio mínimo. Corrigido em `20261105000200_execute_sem_public.sql` (default global + revoke de PUBLIC e anon) e coberto por testes que exigem a mensagem `permission denied for function`.

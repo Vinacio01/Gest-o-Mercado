@@ -23,6 +23,7 @@ O mercadinho não tinha controle de estoque. O dono só descobria que um produto
 | Cadastrar, editar e desativar produtos e categorias | sim | não |
 | Entrada, saída manual e ajuste de estoque | sim | não |
 | Ver o painel financeiro | sim | não |
+| Ver o histórico de vendas e cancelar venda (estoque devolvido) | sim | não |
 | Configurar os alertas | sim | não |
 
 As permissões são garantidas **no banco** (Row Level Security e funções do Postgres), não só escondendo botões. O funcionário nunca recebe o preço de custo.

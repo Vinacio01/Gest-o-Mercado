@@ -39,3 +39,40 @@ export const esquemaResultadoVenda = z.object({
 });
 
 export type ResultadoVenda = z.infer<typeof esquemaResultadoVenda>;
+
+// -----------------------------------------------------------------------------
+// Histórico e cancelamento (proprietário)
+// -----------------------------------------------------------------------------
+
+export const STATUS_VENDA = ["concluida", "cancelada"] as const;
+export type StatusVenda = (typeof STATUS_VENDA)[number];
+
+export const ROTULO_STATUS: Record<StatusVenda, string> = {
+  concluida: "Concluída",
+  cancelada: "Cancelada",
+};
+
+const diaIso = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/)
+  .refine((v) => !Number.isNaN(Date.parse(`${v}T00:00:00Z`)));
+
+/** Filtros do histórico (vêm da URL; inválidos voltam ao padrão). */
+export const esquemaFiltrosVendas = z.object({
+  de: diaIso.optional().catch(undefined),
+  ate: diaIso.optional().catch(undefined),
+  forma: z.enum(FORMAS_PAGAMENTO).optional().catch(undefined),
+  status: z.enum(STATUS_VENDA).optional().catch(undefined),
+  pagina: z.coerce.number().int().min(1).max(10_000).catch(1),
+});
+
+export type FiltrosVendas = z.infer<typeof esquemaFiltrosVendas>;
+
+export const esquemaCancelamento = z.object({
+  venda_id: z.uuid("Venda inválida."),
+  motivo: z
+    .string()
+    .trim()
+    .min(1, "Informe o motivo do cancelamento.")
+    .max(300, "O motivo pode ter no máximo 300 caracteres."),
+});

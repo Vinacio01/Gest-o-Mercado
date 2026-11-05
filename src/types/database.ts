@@ -213,6 +213,9 @@ isOneToOne: false
 "cadastrar_produto":
 { Args: { "p_categoria_id"?: string,"p_codigo_barras"?: string,"p_descricao"?: string,"p_estoque_inicial"?: number,"p_estoque_minimo"?: number,"p_nome": string,"p_preco_custo"?: number,"p_preco_venda": number,"p_unidade"?: string }; Returns: string
                            },
+"cancelar_venda":
+{ Args: { "p_motivo": string,"p_venda_id": string }; Returns: Json
+                           },
 "eh_proprietario":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
