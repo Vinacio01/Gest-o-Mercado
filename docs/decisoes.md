@@ -122,3 +122,12 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 - **Um ponto de destaque**: o total do caixa em vermelho com serifa, como placa de preço de fruteira.
 - **Vermelho significa redução ou problema** (variação negativa, saída, falha); por isso gráficos, "Entrada", "Enviado" e o interruptor ligado usam o verde Broto, nunca o vermelho da marca.
 - **Cabeçalho** mostra a data de hoje no lugar do nome do sistema (útil para quem está no caixa).
+
+## Fase 7: deploy
+
+- **Produção**: Vercel (plano Hobby) em https://gest-o-mercado.vercel.app e Supabase (plano Free, região São Paulo). O plano Free pausa o projeto depois de 7 dias sem uso; para religar, *Restore* no painel (os dados ficam).
+- **Banco criado só pelas migrations** (`supabase db push --remote`); conferido: 7 migrations, RLS em 8 de 8 tabelas, anônimo sem acesso, `quantidade` sem update direto e função interna de estoque fechada.
+- **Cadastro público desligado** no painel; usuários criados em *Authentication > Users*; o proprietário promovido pela tabela `perfis`.
+- **Chaves novas do Supabase** (*publishable* e *secret*) no lugar das antigas (*anon* e *service_role*); o código funciona com as duas.
+- **Lição**: o comando `supabase projects api-keys` devolve a chave secreta **mascarada**; é preciso `--reveal`. A chave mascarada na Vercel fez o cron e o botão "Reenviar" falharem com 500 até a troca.
+- **Dados de demonstração** carregados em produção com `supabase/seed-demo.sql`.
