@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { formatarMoeda } from "@/lib/format";
+import { formatarMoeda, paraCentavos } from "@/lib/format";
 import { enviarAlertasDepoisDaResposta } from "@/lib/services/alertas";
 import { ErroAmigavel } from "@/lib/services/banco";
 import { exigirUsuario } from "@/lib/services/sessao";
@@ -10,7 +10,7 @@ import { registrarVenda } from "@/lib/services/vendas";
 import { esquemaVenda } from "@/lib/validations/vendas";
 
 export type RespostaVenda =
-  | { ok: true; total: string; jaRegistrada: boolean }
+  | { ok: true; total: string; totalCentavos: number; jaRegistrada: boolean }
   | { ok: false; erro: string };
 
 /**
@@ -44,6 +44,7 @@ export async function finalizarVendaAcao(entrada: unknown): Promise<RespostaVend
     return {
       ok: true,
       total: formatarMoeda(resultado.total),
+      totalCentavos: paraCentavos(resultado.total),
       jaRegistrada: resultado.ja_registrada,
     };
   } catch (erro) {

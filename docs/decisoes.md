@@ -144,3 +144,12 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 
 - Antes do commit, um segundo agente (sem o contexto de quem escreveu) revisou o diff da fase. Não achou bug grave em concorrência, estorno ou segurança. Achados aplicados: teste de indicadores mais completo e sem depender do relógio do Node, diálogo que recarregava errado depois de erro, revalidação de `/configuracoes` e testes de anônimo e de produto desativado. Aceito como está: link de linha inteira (`position: relative` em `<tr>`), que funciona nos navegadores atuais.
 - **Achado derivado**: `alter default privileges ... in schema public revoke execute ... from public` **não** retira o EXECUTE padrão de PUBLIC (o default por schema só acrescenta). Todas as funções criadas depois da Fase 2 estavam executáveis pelo anônimo; não era explorável (cada função recusa o anônimo no início), mas feria o privilégio mínimo. Corrigido em `20261105000200_execute_sem_public.sql` (default global + revoke de PUBLIC e anon) e coberto por testes que exigem a mensagem `permission denied for function`.
+
+### Revisão geral do projeto (agente separado, depois da Fase 8)
+
+Sem achados graves; banco, RLS, privilégios, idempotência e fila de alertas confirmados. Achados aplicados:
+- **Caixa sem internet** (o mais importante): uma falha de rede ao finalizar derrubava a tela, perdia carrinho e chave, e o operador refazia a venda com chave nova, **duplicando** a venda. Agora a falha mostra uma mensagem, mantém carrinho e chave, e o novo F2 devolve a venda já gravada. Provado num navegador com a conexão desligada e religada (uma venda só no banco). Também há uma tela de erro amigável (`(app)/error.tsx`) no lugar da tela técnica do Next.
+- **Carrinho alterado depois de a venda já ter sido gravada**: aviso forte quando o banco responde "já registrada" com total diferente do da tela (fecha a pendência da Fase 4).
+- **Listas com mais de 1.000 produtos**: o Supabase devolve no máximo 1.000 linhas por chamada; caixa, seletores e contagem por categoria agora buscam em páginas (`buscarTodas`).
+- **Resend**: pausa de 600 ms entre e-mails (limite de cerca de 2 envios por segundo).
+- **Aceito como limitação conhecida**: se o Resend entregar e a resposta se perder por timeout, a próxima tentativa usa outra chave de idempotência e pode mandar um segundo e-mail (raro).

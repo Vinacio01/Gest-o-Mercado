@@ -84,14 +84,38 @@ export function Caixa({ produtos }: { produtos: ProdutoCaixa[] }) {
       itens: itens.map((i) => ({ produto_id: i.produto.id, quantidade: i.quantidade })),
     };
 
+    const totalNaTela = total;
+
     iniciar(async () => {
-      const resposta = await finalizarVendaAcao(venda);
-      if (resposta.ok) {
-        toast.success(`Venda registrada: ${resposta.total}`, {
-          description: resposta.jaRegistrada
-            ? "Esta venda já tinha sido registrada; nada foi duplicado."
-            : undefined,
+      let resposta: Awaited<ReturnType<typeof finalizarVendaAcao>>;
+      try {
+        resposta = await finalizarVendaAcao(venda);
+      } catch (erro) {
+        // Falha de rede (internet caiu, servidor reiniciando): a venda PODE ter
+        // sido gravada. Mantém o carrinho e a MESMA chave: tentar de novo
+        // devolve a venda já gravada, sem duplicar.
+        console.error("[caixa] falha de comunicação ao finalizar", erro);
+        toast.error("Sem resposta do servidor. Confira a internet e aperte F2 de novo: a venda não será duplicada.", {
+          duration: 10_000,
         });
+        focarBusca();
+        return;
+      }
+
+      if (resposta.ok) {
+        if (resposta.jaRegistrada && resposta.totalCentavos !== totalNaTela) {
+          // A primeira tentativa já tinha gravado a venda, e o carrinho mudou
+          // depois: o que vale é a venda gravada, não a tela.
+          toast.warning(`Esta venda já estava registrada com total ${resposta.total}. As alterações feitas depois não foram gravadas: se faltou algum item, registre numa nova venda.`, {
+            duration: 15_000,
+          });
+        } else {
+          toast.success(`Venda registrada: ${resposta.total}`, {
+            description: resposta.jaRegistrada
+              ? "Esta venda já tinha sido registrada; nada foi duplicado."
+              : undefined,
+          });
+        }
         limparVenda();
         router.refresh(); // atualiza o estoque mostrado na busca
       } else {

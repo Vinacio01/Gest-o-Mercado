@@ -4,7 +4,7 @@ import { diaSeguinte, inicioDoDiaEmSaoPaulo } from "@/lib/format";
 import { criarClienteServidor } from "@/lib/supabase/server";
 import type { DadosMovimentacao, FiltrosMovimentacoes } from "@/lib/validations/estoque";
 
-import { erroDoBanco } from "./banco";
+import { buscarTodas, erroDoBanco } from "./banco";
 
 export const MOVIMENTACOES_POR_PAGINA = 50;
 
@@ -49,13 +49,17 @@ export type ProdutoSelecao = {
 /** Produtos ativos para os seletores (sem custo). */
 export async function listarProdutosParaSelecao(): Promise<ProdutoSelecao[]> {
   const supabase = await criarClienteServidor();
-  const { data, error } = await supabase
-    .from("produtos_catalogo")
-    .select("id, nome, codigo_barras, unidade, quantidade, estoque_minimo")
-    .eq("ativo", true)
-    .order("nome");
-  if (error) throw erroDoBanco(error, "listarProdutosParaSelecao");
-  return data;
+  return buscarTodas(
+    (de, ate) =>
+      supabase
+        .from("produtos_catalogo")
+        .select("id, nome, codigo_barras, unidade, quantidade, estoque_minimo")
+        .eq("ativo", true)
+        .order("nome")
+        .order("id")
+        .range(de, ate),
+    "listarProdutosParaSelecao",
+  );
 }
 
 export type Movimentacao = {

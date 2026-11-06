@@ -66,3 +66,26 @@ export function erroDoBanco(error: ErroPostgrest, contexto: string): ErroAmigave
 export function decimalParaBanco(valor: string): number {
   return valor as unknown as number;
 }
+
+/** Tamanho máximo de página do PostgREST (max_rows do Supabase). */
+const PAGINA_MAXIMA = 1000;
+
+/**
+ * Busca TODAS as linhas de uma consulta, em páginas de 1.000. O Supabase
+ * devolve no máximo 1.000 linhas por chamada; sem isto, uma loja com mais
+ * produtos teria itens faltando no caixa e nos seletores.
+ * A consulta precisa ter ordenação estável (ex.: nome e depois id).
+ */
+export async function buscarTodas<T>(
+  pagina: (de: number, ate: number) => PromiseLike<{ data: T[] | null; error: ErroPostgrest | null }>,
+  contexto: string,
+): Promise<T[]> {
+  const todas: T[] = [];
+  for (let de = 0; ; de += PAGINA_MAXIMA) {
+    const { data, error } = await pagina(de, de + PAGINA_MAXIMA - 1);
+    if (error) throw erroDoBanco(error, contexto);
+    const linhas = data ?? [];
+    todas.push(...linhas);
+    if (linhas.length < PAGINA_MAXIMA) return todas;
+  }
+}

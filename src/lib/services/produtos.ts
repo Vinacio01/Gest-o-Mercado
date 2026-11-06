@@ -9,7 +9,7 @@ import type {
   FiltrosProdutos,
 } from "@/lib/validations/produtos";
 
-import { decimalParaBanco, ErroAmigavel, erroDoBanco } from "./banco";
+import { buscarTodas, decimalParaBanco, ErroAmigavel, erroDoBanco } from "./banco";
 
 export const PRODUTOS_POR_PAGINA = 50;
 
@@ -199,12 +199,21 @@ export async function listarCategoriasComContagem() {
   const supabase = await criarClienteServidor();
   const [categorias, produtos] = await Promise.all([
     listarCategorias(),
-    supabase.from("produtos").select("categoria_id").eq("ativo", true).not("categoria_id", "is", null),
+    buscarTodas(
+      (de, ate) =>
+        supabase
+          .from("produtos")
+          .select("categoria_id")
+          .eq("ativo", true)
+          .not("categoria_id", "is", null)
+          .order("id")
+          .range(de, ate),
+      "listarCategoriasComContagem",
+    ),
   ]);
-  if (produtos.error) throw erroDoBanco(produtos.error, "listarCategoriasComContagem");
 
   const contagem = new Map<string, number>();
-  for (const { categoria_id } of produtos.data) {
+  for (const { categoria_id } of produtos) {
     if (categoria_id) contagem.set(categoria_id, (contagem.get(categoria_id) ?? 0) + 1);
   }
   return categorias.map((c) => ({ ...c, produtos: contagem.get(c.id) ?? 0 }));
@@ -238,11 +247,15 @@ export async function atualizarCategoria(
  */
 export async function listarProdutosParaCaixa() {
   const supabase = await criarClienteServidor();
-  const { data, error } = await supabase
-    .from("produtos_catalogo")
-    .select("id, nome, codigo_barras, unidade, preco_venda, quantidade")
-    .eq("ativo", true)
-    .order("nome");
-  if (error) throw erroDoBanco(error, "listarProdutosParaCaixa");
-  return data;
+  return buscarTodas(
+    (de, ate) =>
+      supabase
+        .from("produtos_catalogo")
+        .select("id, nome, codigo_barras, unidade, preco_venda, quantidade")
+        .eq("ativo", true)
+        .order("nome")
+        .order("id")
+        .range(de, ate),
+    "listarProdutosParaCaixa",
+  );
 }

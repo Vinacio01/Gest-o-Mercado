@@ -8,6 +8,13 @@ import { criarClienteAdmin } from "@/lib/supabase/admin";
 /** Depois de 5 tentativas, o cron para de tentar; o botão "Reenviar" ainda tenta. */
 export const LIMITE_TENTATIVAS = 5;
 
+/**
+ * Pausa entre um e-mail e o próximo. O Resend limita a cerca de 2 envios por
+ * segundo; sem a pausa, vários alertas de uma vez (ex.: botão "Reenviar")
+ * poderiam ser recusados e ficariam esperando o cron do dia seguinte.
+ */
+const PAUSA_ENTRE_ENVIOS_MS = 600;
+
 export type DadosAlertaEmail = {
   nome: string;
   quantidade: number;
@@ -86,7 +93,8 @@ export async function processarAlertas(opcoes: Opcoes = {}): Promise<ResumoEnvio
   let enviados = 0;
   let falhas = 0;
 
-  for (const alerta of reservados) {
+  for (const [indice, alerta] of reservados.entries()) {
+    if (indice > 0) await new Promise((r) => setTimeout(r, PAUSA_ENTRE_ENVIOS_MS));
     const email = montarEmailAlerta({
       nome: alerta.produto_nome,
       quantidade: alerta.produto_quantidade,
