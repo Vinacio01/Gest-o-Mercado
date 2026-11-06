@@ -222,6 +222,7 @@ Os usuários da demo têm senha pública: **nunca** os crie num banco com dados 
 - **Preço de custo nunca chega ao funcionário**: ele lê produtos por uma view sem as colunas de custo.
 - **Segredos só no servidor**: service role, Resend e `CRON_SECRET` não têm prefixo `NEXT_PUBLIC_` e ficam em módulos `server-only`.
 - **Toda entrada validada com Zod no servidor**; erros técnicos vão para o log e o usuário vê mensagens amigáveis.
+- **Cabeçalhos de segurança** (anti-clickjacking, anti-sniffing) e dependências de produção sem vulnerabilidades conhecidas. Detalhes, riscos e checklist para uso real em [`docs/seguranca.md`](docs/seguranca.md).
 
 ## Testes
 
@@ -258,3 +259,6 @@ tests/            Vitest (tests/db/ roda contra o Supabase local)
 
 - [`CLAUDE.md`](CLAUDE.md): especificação do produto e regras do projeto
 - [`docs/decisoes.md`](docs/decisoes.md): decisões aprovadas durante o desenvolvimento, com o motivo de cada uma
+- [`docs/arquitetura.md`](docs/arquitetura.md): como o sistema é montado (pastas, fluxos, modelo de dados, funções do banco)
+- [`docs/seguranca.md`](docs/seguranca.md): ameaças, proteções, testes, riscos conhecidos e checklist para uso real
+- [`docs/operacao.md`](docs/operacao.md): guia de manutenção (tarefas comuns, problemas e soluções)
