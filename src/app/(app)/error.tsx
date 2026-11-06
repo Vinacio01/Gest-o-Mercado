@@ -23,7 +23,7 @@ export default function ErroDaArea({
 
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-16 text-center">
-      <h1 className="font-display text-2xl font-bold text-folha">Algo deu errado nesta tela</h1>
+      <h1 className="font-display text-2xl font-bold text-titulo">Algo deu errado nesta tela</h1>
       <p className="text-muted-foreground">
         Pode ter sido uma falha de conexão. Nada do que já estava salvo foi perdido. Tente de novo; se
         continuar, recarregue a página.

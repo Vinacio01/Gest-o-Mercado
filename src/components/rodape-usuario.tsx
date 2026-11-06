@@ -1,6 +1,7 @@
 import { LogOut } from "lucide-react";
 
 import { sair } from "@/app/login/actions";
+import { AlternarTema } from "@/components/alternar-tema";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import type { UsuarioAtual } from "@/lib/services/sessao";
 
@@ -16,6 +17,7 @@ type Props = {
 export function RodapeUsuario({ usuario }: Props) {
   return (
     <SidebarMenu>
+      <AlternarTema />
       <SidebarMenuItem>
         <div className="px-2 py-1.5 group-data-[collapsible=icon]:hidden">
           <p className="truncate text-sm font-medium">{usuario.nome}</p>

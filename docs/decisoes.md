@@ -117,7 +117,7 @@ Decisões aprovadas que complementam o `CLAUDE.md`. Cada item diz o que foi deci
 | N | O sistema mostra o **nome da loja** (selo oval no login e na sidebar; aba "… \| Iracema") | Escolha do usuário. Telefone e Facebook da placa ficam de fora |
 
 - **Selo oval refeito em código** (`components/selo-iracema.tsx`), sem usar a imagem da placa. A foto das frutas não entra nas telas: a especificação pede interface limpa e sem enfeites.
-- **Paleta** em `globals.css` (Folha `#1f4a2c`, Iracema `#b3141c`, Broto `#2f7a3f`, Laranja `#e07a1f`, Limão `#f2c230`, fundo `#f6f7f3`), com contraste conferido (AA). Só tema claro.
+- **Paleta** em `globals.css` (Folha `#1f4a2c`, Iracema `#b3141c`, Broto `#2f7a3f`, Laranja `#e07a1f`, Limão `#f2c230`, fundo `#f6f7f3`), com contraste conferido (AA).
 - **Tipografia**: Zilla Slab (serifa pesada, como o "IRACEMA" da placa) só para logo e títulos; Source Sans 3 para interface, tabelas e **todos os números** (utilitário `numero`: negrito com algarismos alinhados e tabulares). Os algarismos da Zilla variam de altura e ficavam irregulares nos valores (pedido do usuário).
 - **Um ponto de destaque**: o total do caixa em vermelho com serifa, como placa de preço de fruteira.
 - **Vermelho significa redução ou problema** (variação negativa, saída, falha); por isso gráficos, "Entrada", "Enviado" e o interruptor ligado usam o verde Broto, nunca o vermelho da marca.
@@ -153,3 +153,9 @@ Sem achados graves; banco, RLS, privilégios, idempotência e fila de alertas co
 - **Listas com mais de 1.000 produtos**: o Supabase devolve no máximo 1.000 linhas por chamada; caixa, seletores e contagem por categoria agora buscam em páginas (`buscarTodas`).
 - **Resend**: pausa de 600 ms entre e-mails (limite de cerca de 2 envios por segundo).
 - **Aceito como limitação conhecida**: se o Resend entregar e a resposta se perder por timeout, a próxima tentativa usa outra chave de idempotência e pode mandar um segundo e-mail (raro).
+
+## Modo escuro (pedido do usuário)
+
+- **Seletor ☀ Claro / ☾ Escuro no rodapé da sidebar** (com a sidebar recolhida, um botão que alterna). Começa no claro e lembra a escolha no navegador (`next-themes`, chave `iracema-tema`); sem "piscar" o tema errado ao abrir.
+- **Cores da marca iguais nos dois temas** (selo branco com IRACEMA vermelho, fundo verde do login). Cores de **texto** viraram tokens que mudam no escuro: `titulo` (verde-folha → verde-claro), `preco` (vermelho Iracema → vermelho claro) e `sobre-broto` (texto em cima dos selos verdes).
+- **Paleta escura**: base verde-folha muito escura (`#0e1611`, cartões `#16201a`); todas as combinações de texto conferidas em AA, e a cor dos gráficos (`#46a35a`) validada para o fundo escuro.

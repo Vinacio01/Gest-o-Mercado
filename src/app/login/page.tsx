@@ -24,7 +24,7 @@ export default async function PaginaLogin({ searchParams }: PageProps<"/login">)
     <main className="flex min-h-svh flex-col items-center justify-center gap-8 bg-folha p-4">
       <SeloIracema tamanho="grande" />
       <div className="w-full max-w-sm rounded-xl bg-card p-6 shadow-lg">
-        <h1 className="font-display text-2xl font-bold text-folha">Entrar</h1>
+        <h1 className="font-display text-2xl font-bold text-titulo">Entrar</h1>
         <p className="mt-1 mb-5 text-sm text-muted-foreground">
           Use o e-mail e a senha que o proprietário cadastrou para você.
         </p>

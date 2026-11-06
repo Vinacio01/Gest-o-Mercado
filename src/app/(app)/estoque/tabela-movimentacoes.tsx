@@ -16,7 +16,7 @@ import { ROTULO_TIPO } from "@/lib/validations/estoque";
 // Cor pelo sentido: entra estoque = verde (Broto), sai = vermelho, venda e
 // ajuste neutros. Vermelho no sistema sempre quer dizer redução ou problema.
 const ESTILO_TIPO: Record<Movimentacao["tipo"], string> = {
-  entrada: "bg-broto text-white",
+  entrada: "bg-broto text-sobre-broto",
   cancelamento_venda: "bg-broto/15 text-broto",
   venda: "border-border bg-transparent text-foreground",
   saida_manual: "bg-destructive/10 text-destructive",

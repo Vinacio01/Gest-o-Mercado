@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Source_Sans_3, Zilla_Slab } from "next/font/google";
 
+import { ProvedorTema } from "@/components/provedor-tema";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -29,10 +30,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${sourceSans.variable} ${zillaSlab.variable} h-full antialiased`}>
+    // suppressHydrationWarning: o next-themes põe a classe "dark" no <html> antes do React.
+    <html
+      lang="pt-BR"
+      className={`${sourceSans.variable} ${zillaSlab.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
       <body className="min-h-full">
-        <TooltipProvider>{children}</TooltipProvider>
-        <Toaster richColors position="top-right" theme="light" />
+        <ProvedorTema>
+          <TooltipProvider>{children}</TooltipProvider>
+          <Toaster richColors position="top-right" />
+        </ProvedorTema>
       </body>
     </html>
   );
