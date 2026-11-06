@@ -230,7 +230,15 @@ npx supabase start
 npm test
 ```
 
-O **CI** (`.github/workflows/ci.yml`) roda a cada push: sobe um Supabase do zero, aplica as migrations, confere que os tipos do banco batem com elas e roda lint, tipos, testes e build. Nenhum segredo de produção é usado.
+Testes de ponta a ponta (navegador de verdade, com o Supabase local rodando):
+
+```bash
+npm run test:e2e
+```
+
+Cobrem a venda pelo código de barras, o caixa sem internet (a venda não se perde nem duplica), produto sem estoque, o funcionário barrado nas telas do proprietário e o cancelamento com estorno.
+
+O **CI** (`.github/workflows/ci.yml`) roda a cada push: sobe um Supabase do zero, aplica as migrations, confere que os tipos do banco batem com elas e roda lint, tipos, testes, build e os testes de ponta a ponta. Nenhum segredo de produção é usado.
 
 Cobrem: venda (normal, estoque insuficiente sem gravar nada, idempotência inclusive com envios simultâneos, preço do banco, disputa pelas últimas unidades), movimentações de estoque, ciclo de alertas e fila de envio (exatamente um e-mail), permissões por papel, indicadores (canceladas fora, fuso e virada de mês) e validações.
 

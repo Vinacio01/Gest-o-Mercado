@@ -16,7 +16,8 @@
     "db:demo": "supabase db query -f supabase/seed-demo.sql",
     "db:limpar": "supabase db query -f supabase/limpar-dados.sql",
     "usuarios:demo": "node scripts/criar-usuarios-demo.mts",
-    "demo:redefinir-producao": "supabase db query --remote --yes -f supabase/limpar-dados.sql && supabase db query --remote --yes -f supabase/seed-demo.sql"
+    "demo:redefinir-producao": "supabase db query --remote --yes -f supabase/limpar-dados.sql && supabase db query --remote --yes -f supabase/seed-demo.sql",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -39,6 +40,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^24.19.2",
     "@types/react": "^19",

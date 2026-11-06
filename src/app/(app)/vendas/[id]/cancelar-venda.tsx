@@ -1,8 +1,9 @@
 "use client";
 
-import { startTransition as iniciarTransicao, useActionState, useEffect, useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Ban, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Campo } from "@/components/campo";
 import { Button } from "@/components/ui/button";
@@ -16,8 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { useResultadoAcao } from "@/hooks/use-resultado-acao";
-import { ESTADO_INICIAL } from "@/lib/estado-formulario";
+import { ESTADO_INICIAL, type EstadoFormulario } from "@/lib/estado-formulario";
 
 import { cancelarVendaAcao } from "../actions";
 
@@ -65,18 +65,29 @@ function FormularioCancelamento({
   aoFechar,
 }: Props & { aoFechar: () => void }) {
   const router = useRouter();
-  const [estado, enviar, pendente] = useActionState(
-    cancelarVendaAcao.bind(null, vendaId),
-    ESTADO_INICIAL,
-  );
+  const [estado, setEstado] = useState<EstadoFormulario>(ESTADO_INICIAL);
+  const [pendente, iniciar] = useTransition();
 
-  useResultadoAcao(estado, aoFechar);
-
-  // Erro do banco (ex.: a venda já foi cancelada em outra aba): recarrega a
-  // página para mostrar a situação real. Erro de campo (motivo) não recarrega.
-  useEffect(() => {
-    if (estado.versao && !estado.ok && !estado.campos) router.refresh();
-  }, [estado, router]);
+  // O aviso sai na hora em que a resposta chega, e não num efeito depois: no
+  // sucesso, a página atualizada já mostra a venda cancelada e este diálogo
+  // some junto com o botão, antes que um efeito tivesse a chance de rodar.
+  function aoEnviar(evento: React.FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    const dados = new FormData(evento.currentTarget);
+    iniciar(async () => {
+      const resultado = await cancelarVendaAcao(vendaId, estado, dados);
+      if (resultado.ok) {
+        toast.success(resultado.mensagem);
+        aoFechar();
+        return;
+      }
+      setEstado(resultado);
+      toast.error(resultado.erro);
+      // Erro do banco (ex.: já cancelada em outra aba): recarrega para mostrar
+      // a situação real. Erro de campo (motivo) não recarrega.
+      if (!resultado.campos) router.refresh();
+    });
+  }
 
   return (
     <>
@@ -90,11 +101,7 @@ function FormularioCancelamento({
         </DialogHeader>
         <form
           noValidate
-          onSubmit={(e) => {
-            e.preventDefault();
-            const dados = new FormData(e.currentTarget);
-            iniciarTransicao(() => enviar(dados));
-          }}
+          onSubmit={aoEnviar}
           className="space-y-4"
         >
           <Campo id="motivo" rotulo="Motivo" erro={estado.campos?.motivo}>

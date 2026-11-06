@@ -159,3 +159,11 @@ Sem achados graves; banco, RLS, privilégios, idempotência e fila de alertas co
 - **Seletor ☀ Claro / ☾ Escuro no rodapé da sidebar** (com a sidebar recolhida, um botão que alterna). Começa no claro e lembra a escolha no navegador (`next-themes`, chave `iracema-tema`); sem "piscar" o tema errado ao abrir.
 - **Cores da marca iguais nos dois temas** (selo branco com IRACEMA vermelho, fundo verde do login). Cores de **texto** viraram tokens que mudam no escuro: `titulo` (verde-folha → verde-claro), `preco` (vermelho Iracema → vermelho claro) e `sobre-broto` (texto em cima dos selos verdes).
 - **Paleta escura**: base verde-folha muito escura (`#0e1611`, cartões `#16201a`); todas as combinações de texto conferidas em AA, e a cor dos gráficos (`#46a35a`) validada para o fundo escuro.
+
+## Preparação para portfólio (depois da Fase 8)
+
+- **Demo pública**: usuários próprios da demonstração (`dono@demo-iracema.test`, `caixa@demo-iracema.test`) com senha **publicada no README**, criados por `scripts/criar-usuarios-demo.mts`; `npm run demo:redefinir-producao` apaga e recria os dados. Nunca usar esses usuários num banco com dados reais.
+- **README com capturas** tiradas do site em produção (`docs/imagens/`).
+- **CI no GitHub Actions**: sobe um Supabase do zero, aplica as migrations, confere que os tipos do banco batem com elas, roda lint, tipos, testes, build e os testes de ponta a ponta. O primeiro run pegou um "na minha máquina funciona": os tipos das rotas do Next não existiam num clone limpo; o `typecheck` agora os gera antes.
+- **Testes de ponta a ponta com Playwright** (dependência nova, só de desenvolvimento): o Vitest não abre navegador, e só um navegador prova o comportamento das telas. Usa o Chrome instalado (sem baixar navegadores) e roda contra o **build de produção**, não o `next dev`, que compila cada tela no primeiro acesso e deixava os testes instáveis. Cobrem: venda pelo código de barras, caixa sem internet (sem perder nem duplicar), produto sem estoque, funcionário barrado nas telas do proprietário e cancelamento com estorno.
+- **Bug achado pelo teste de ponta a ponta**: o aviso "Venda cancelada" nunca aparecia. A página atualizada (já cancelada) removia o diálogo antes do efeito que mostrava o aviso; agora o aviso sai direto na resposta da ação.

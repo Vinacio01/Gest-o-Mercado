@@ -62,3 +62,15 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # Navegador de verdade (Chrome já instalado no runner) contra o build acima.
+      - name: Testes de ponta a ponta (Playwright)
+        run: npm run test:e2e
+
+      - name: Guardar o rastro dos testes que falharam
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rastros-playwright
+          path: test-results/
+          retention-days: 7
