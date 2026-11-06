@@ -1,5 +1,7 @@
 # Estoque Mercadinho · Fruteira Iracema
 
+[![CI](https://github.com/Vinacio01/Gest-o-Mercado/actions/workflows/ci.yml/badge.svg)](https://github.com/Vinacio01/Gest-o-Mercado/actions/workflows/ci.yml)
+
 Sistema de caixa, controle de estoque e painel financeiro para a **Mini Mercado e Fruteira Iracema**, um mercadinho de bairro em Caxias do Sul (RS).
 
 ## Experimente a demo
@@ -227,6 +229,8 @@ Os usuários da demo têm senha pública: **nunca** os crie num banco com dados 
 npx supabase start
 npm test
 ```
+
+O **CI** (`.github/workflows/ci.yml`) roda a cada push: sobe um Supabase do zero, aplica as migrations, confere que os tipos do banco batem com elas e roda lint, tipos, testes e build. Nenhum segredo de produção é usado.
 
 Cobrem: venda (normal, estoque insuficiente sem gravar nada, idempotência inclusive com envios simultâneos, preço do banco, disputa pelas últimas unidades), movimentações de estoque, ciclo de alertas e fila de envio (exatamente um e-mail), permissões por papel, indicadores (canceladas fora, fuso e virada de mês) e validações.
 
