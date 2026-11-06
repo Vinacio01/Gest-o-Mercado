@@ -18,6 +18,31 @@ Sugestão de roteiro (3 minutos):
 
 São dados fictícios de demonstração, redefinidos de tempos em tempos; fique à vontade para vender, cancelar e cadastrar. O login de funcionário mostra que as permissões são aplicadas pelo **banco**, não só escondendo botões: tente abrir `/painel` como caixa.
 
+## Telas
+
+**Caixa:** leitor de código de barras (código + Enter), total em destaque, forma de pagamento e F2 para finalizar.
+
+![Caixa com três produtos na venda](docs/imagens/caixa.png)
+
+**Painel do proprietário:** faturamento do dia e do período, comparação com o período anterior equivalente, ticket médio, lucro bruto estimado e gráficos.
+
+![Painel financeiro](docs/imagens/painel.png)
+
+<table>
+  <tr>
+    <td width="70%"><img src="docs/imagens/produtos.png" alt="Lista de produtos com estoque baixo destacado"></td>
+    <td width="30%"><img src="docs/imagens/caixa-celular.png" alt="Caixa no celular"></td>
+  </tr>
+  <tr>
+    <td>Produtos: busca sem acento, filtros e estoque baixo destacado</td>
+    <td>Funciona no celular</td>
+  </tr>
+</table>
+
+**Modo escuro**, com a mesma identidade da loja:
+
+![Painel no modo escuro](docs/imagens/painel-escuro.png)
+
 ## O problema
 
 O mercadinho não tinha controle de estoque. O dono só descobria que um produto tinha acabado quando o cliente pedia, e não sabia se o mês estava melhor ou pior que o anterior.
