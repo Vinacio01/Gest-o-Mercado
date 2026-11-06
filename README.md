@@ -1,6 +1,6 @@
 # Estoque Mercadinho · Fruteira Iracema
 
-[![CI](https://github.com/Vinacio01/Gest-o-Mercado/actions/workflows/ci.yml/badge.svg)](https://github.com/Vinacio01/Gest-o-Mercado/actions/workflows/ci.yml)
+[![CI](https://github.com/Vinacio01/fruteira-iracema/actions/workflows/ci.yml/badge.svg)](https://github.com/Vinacio01/fruteira-iracema/actions/workflows/ci.yml)
 
 Sistema de caixa, controle de estoque e painel financeiro para a **Mini Mercado e Fruteira Iracema**, um mercadinho de bairro em Caxias do Sul (RS).
 
