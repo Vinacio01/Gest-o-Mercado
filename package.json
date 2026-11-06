@@ -14,7 +14,9 @@
     "db:tipos": "supabase gen types typescript --local --schema public > src/types/database.ts",
     "db:reset": "supabase db reset",
     "db:demo": "supabase db query -f supabase/seed-demo.sql",
-    "db:limpar": "supabase db query -f supabase/limpar-dados.sql"
+    "db:limpar": "supabase db query -f supabase/limpar-dados.sql",
+    "usuarios:demo": "node scripts/criar-usuarios-demo.mts",
+    "demo:redefinir-producao": "supabase db query --remote --yes -f supabase/limpar-dados.sql && supabase db query --remote --yes -f supabase/seed-demo.sql"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

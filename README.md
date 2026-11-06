@@ -2,7 +2,21 @@
 
 Sistema de caixa, controle de estoque e painel financeiro para a **Mini Mercado e Fruteira Iracema**, um mercadinho de bairro em Caxias do Sul (RS).
 
-**Demo no ar:** https://gest-o-mercado.vercel.app (acesso com usuário e senha; não há cadastro público)
+## Experimente a demo
+
+**https://gest-o-mercado.vercel.app**
+
+| Entrar como | E-mail | Senha | O que dá para ver |
+|---|---|---|---|
+| **Proprietário** | `dono@demo-iracema.test` | `demo-iracema-dono` | Painel financeiro, produtos, estoque, histórico de vendas, cancelamento e alertas |
+| **Funcionário (caixa)** | `caixa@demo-iracema.test` | `demo-iracema-caixa` | Caixa e consulta de produtos, **sem** preço de custo nem dados financeiros |
+
+Sugestão de roteiro (3 minutos):
+1. Entre como **caixa**, digite `2000000000001` na busca e aperte **Enter** (o leitor de código de barras faz o mesmo), escolha **Pix** e aperte **F2**.
+2. Saia e entre como **proprietário**: veja a venda em **Vendas**, a baixa em **Estoque > Histórico** e os números no **Painel**.
+3. Em **Vendas**, abra a venda e **cancele**: o estoque volta e ela sai do painel.
+
+São dados fictícios de demonstração, redefinidos de tempos em tempos; fique à vontade para vender, cancelar e cadastrar. O login de funcionário mostra que as permissões são aplicadas pelo **banco**, não só escondendo botões: tente abrir `/painel` como caixa.
 
 ## O problema
 
@@ -154,6 +168,15 @@ Indicadores calculados no banco (funções SQL em `supabase/migrations/202611040
 | Produção (Supabase) | Abra **SQL Editor**, cole o conteúdo de `supabase/seed-demo.sql` e clique em **Run** |
 
 Os produtos da demonstração usam códigos de barras `2000000000xxx`; rodar duas vezes é recusado. Os alertas dos produtos com estoque baixo ficam **pendentes** e são enviados para o e-mail configurado pelo próximo cron ou pelo botão "Reenviar".
+
+### Usuários e redefinição da demo pública
+
+| Comando | O que faz |
+|---|---|
+| `npm run usuarios:demo -- --env .env.producao.local --producao` | Cria ou atualiza os dois usuários públicos da demo (os da tabela no topo deste README) |
+| `npm run demo:redefinir-producao` | **Apaga tudo** no banco de produção (vendas, produtos, alertas) e recria os dados de demonstração, terminando no dia de hoje. Use quando a demo estiver bagunçada ou com os meses vazios |
+
+Os usuários da demo têm senha pública: **nunca** os crie num banco com dados reais de uma loja.
 
 ### Limpar antes do uso real
 
