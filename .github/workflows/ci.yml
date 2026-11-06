@@ -1,0 +1,64 @@
+# Integração contínua: a cada push e pull request, sobe um Supabase de teste do
+# zero, aplica as migrations do repositório e roda lint, tipos, testes e build.
+# Nenhum segredo de produção é usado: o banco é local, criado e destruído no CI.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Lint, tipos, testes e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tipos
+        run: npm run typecheck
+
+      # Só os serviços que os testes usam: banco, Auth, API REST e o gateway.
+      - name: Subir o Supabase local e aplicar as migrations
+        run: >
+          npx supabase start
+          -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: Variáveis do Supabase local para os testes
+        run: |
+          npx supabase status -o env > status.env
+          set -a; . ./status.env; set +a
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON_KEY"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY"
+          } > .env.local
+          rm status.env
+
+      - name: Tipos do banco batem com as migrations
+        run: |
+          npm run db:tipos
+          git diff --exit-code src/types/database.ts
+
+      - name: Testes
+        run: npm test
+
+      - name: Build
+        run: npm run build
